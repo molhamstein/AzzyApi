@@ -1,0 +1,20 @@
+{
+  "name": "formClient",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "formID": {
+      "type": "string"
+    },
+    "clientID": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

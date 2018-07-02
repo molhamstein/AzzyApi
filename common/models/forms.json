@@ -1,0 +1,260 @@
+{
+  "name": "forms",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "DateOfArr": {
+      "type": "date"
+    },
+    "Status": {
+      "type": "string"
+    },
+    "DateOfProc": {
+      "type": "date"
+    },
+    "Deleted": {
+      "type": "boolean",
+      "default": false
+    },
+    "TextBoxClient": {
+      "type": "string"
+    },
+    "TextBoxAdmin": {
+      "type": "string"
+    },
+    "AdminId": {
+      "type": "string"
+    },
+    "NameFarsi": {
+      "type": "string"
+    },
+    "SurnameFarsi": {
+      "type": "string"
+    },
+    "NameEnglish": {
+      "type": "string"
+    },
+    "SurnameEnglish": {
+      "type": "string"
+    },
+    "DateOfBirthPer": {
+      "type": "date"
+    },
+    "DateOfBirthGre": {
+      "type": "date"
+    },
+    "MaritalStatus": {
+      "type": "string"
+    },
+    "NumberOfChildren": {
+      "type": "number"
+    },
+    "MobileNo": {
+      "type": "string"
+    },
+    "LandlinePhoneNo": {
+      "type": "string"
+    },
+    "Email": {
+      "type": "string"
+    },
+    "SkypeID": {
+      "type": "string"
+    },
+    "ResidentialAddressFarsi": {
+      "type": "string"
+    },
+    "ResidentialAddressEnglish": {
+      "type": "string"
+    },
+    "goodEnglish": {
+      "type": "string"
+    },
+    "GradeEn": {
+      "type": "number"
+    },
+    "WritingEn": {
+      "type": "number"
+    },
+    "ListeningEn": {
+      "type": "number"
+    },
+    "ReadingEn": {
+      "type": "number"
+    },
+    "SpeakingEn": {
+      "type": "number"
+    },
+    "OverallEn": {
+      "type": "number"
+    },
+    "AssocField": {
+      "type": "string"
+    },
+    "AssocUniversity": {
+      "type": "string"
+    },
+    "AssocCityOfUniversity": {
+      "type": "string"
+    },
+    "AssocYearOfGraduation": {
+      "type": "number"
+    },
+    "BacField": {
+      "type": "string"
+    },
+    "BacUniversity": {
+      "type": "string"
+    },
+    "BacCityOfUniversity": {
+      "type": "string"
+    },
+    "BacYearOfGraduation": {
+      "type": "number"
+    },
+    "MasterField": {
+      "type": "string"
+    },
+    "MasterUniversity": {
+      "type": "string"
+    },
+    "MasterCityOfUniversity": {
+      "type": "string"
+    },
+    "MasterYearOfGraduation": {
+      "type": "number"
+    },
+    "PHDField": {
+      "type": "string"
+    },
+    "PHDUniversity": {
+      "type": "string"
+    },
+    "PHDCityOfUniversity": {
+      "type": "string"
+    },
+    "PHDYearOfGraduation": {
+      "type": "number"
+    },
+    "FieldOfWorking": {
+      "type": "string"
+    },
+    "RelatedEdYearsPaid": {
+      "type": "number"
+    },
+    "RelatedEdYearsNonPaid": {
+      "type": "number"
+    },
+    "NonRelatedEdYearsPaid": {
+      "type": "number"
+    },
+    "NonRelatedEdYearsNonPaid": {
+      "type": "number"
+    },
+    "MilitaryStatus": {
+      "type": "string"
+    },
+    "MilitaryPlace": {
+      "type": "number"
+    },
+    "MilitaryDurationFrom": {
+      "type": "number"
+    },
+    "MilitaryDurationTo": {
+      "type": "number"
+    },
+    "SignificantCurrentSickness": {
+      "type": "string"
+    },
+    "SurgeryPastOrFuture": {
+      "type": "string"
+    },
+    "AustraliaFamilyRelation": {
+      "type": "string"
+    },
+    "AustraliaLivingState": {
+      "type": "string"
+    },
+    "AustraliaLivingCity": {
+      "type": "string"
+    },
+    "AustraliaVisaType": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "Client": {
+      "type": "belongsTo",
+      "model": "client",
+      "foreignKey": "ClientId"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "readForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "readForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "readForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "secretary",
+      "permission": "ALLOW",
+      "property": "readForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "writeForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "writeForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "writeForms"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    }
+  ],
+  "methods": {}
+}

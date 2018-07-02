@@ -1,0 +1,61 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "mongoDS"
+  },
+  "AccessToken": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "mongoDS",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "mongoDS",
+    "public": false,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "forms": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "client": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "staffuser": {
+    "dataSource": "mongoDS",
+    "public": true,
+    "options": {
+      "emailVerificationRequired": true
+    }
+  },
+  "consTime": {
+    "dataSource": "mongoDS",
+    "public": true
+  },
+  "formClient": {
+    "dataSource": "mongoDS",
+    "public": true
+  }
+}
