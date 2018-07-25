@@ -7,30 +7,7 @@ var ACL = app.models.ACL;
 
 module.exports = function (Staffuser) {
     Staffuser.userDef = function () { };
-    /*Staffuser.afterRemote('create', function (ctx, user, next) {
-        let Role = app.models.Role;
-        let RoleMapping = app.models.RoleMapping;
-        Role.find({where: {name: user.Type}}
-        , function (err, role) {
-            if (err) throw err;
 
-            console.log('finded role:', role);
-
-            //make manager
-            RoleMapping.create({
-                principalType: "USER",
-                principalId: user.id,
-                roleId: role.id      
-            }, function (err, principal) {
-                if (err) throw err;
-
-                console.log('Created principal:', principal);
-            });
-
-        });
-        next();
-    });
-*/
 
     /**
    * Add a user to the given role.
