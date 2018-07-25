@@ -5,7 +5,7 @@
   },
   "mongoDS": {
     "host": "localhost",
-    "port": 27017,
+    "port": 27018,
     "url": "",
     "database": "Azzy",
     "password": "",
