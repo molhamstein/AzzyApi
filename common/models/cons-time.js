@@ -34,10 +34,10 @@ module.exports = function (Constime) {
     }
 
     function updt(s,e,id){
-        Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consID: id },
+        Constime.updateAll({ startDate: { gte: s , lt: e }, endDate: { gt: e }, consID: id },
             { startDate: e });
 
-        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consID: id },
+        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e , gt: s }, consID: id },
             { endDate: s });
 
     }
@@ -90,7 +90,7 @@ module.exports = function (Constime) {
         var d = ctime.startDate;
         var d1 = moment(d).add(30, 'm').toDate();
 
-        while (d1 < ctime.endDate) {
+        while (d1 <= ctime.endDate) {
 
             if (d.getHours() == 23) {
 
@@ -120,7 +120,8 @@ module.exports = function (Constime) {
                 clientID: ctime.clientID
 
             }
-            cc(elm);
+            if (d1<=ctime.endDate)
+                cc(elm);
             d = d1;
         }
         Constime.destroyById(ctime.id, function (err, ob) {
