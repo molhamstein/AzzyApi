@@ -3,7 +3,8 @@
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
-    "validateUpsert": true
+    "validateUpsert": true,
+    "strictObjectIDCoercion": true
   },
   "properties": {
     "startDate": {
@@ -15,9 +16,15 @@
     "location": {
       "type": "string"
     },
-    "blocked": {
+    "open": {
       "type": "boolean",
       "default": true
+    },
+    "consID":{
+      "type": "string"
+    },
+    "clientID":{
+      "type": "string"
     }
   },
   "validations": [],
@@ -41,21 +48,21 @@
       "principalType": "ROLE",
       "principalId": "manager",
       "permission": "ALLOW",
-      "property": "writeCalander"
+      "property": "create"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "consultant",
       "permission": "ALLOW",
-      "property": "writeCalander"
+      "property": "create"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "adminstrator",
       "permission": "ALLOW",
-      "property": "writeCalander"
+      "property": "create"
     },
     {
       "accessType": "EXECUTE",
