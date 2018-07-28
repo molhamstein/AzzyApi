@@ -84,6 +84,12 @@
       "principalId": "adminstrator",
       "permission": "ALLOW",
       "property": "ocCalander"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW"
     }
   ],
   "methods": {}
