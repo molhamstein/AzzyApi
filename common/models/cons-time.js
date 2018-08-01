@@ -8,11 +8,32 @@ moment().format();
 module.exports = function (Constime) {
 
     Constime.readCalander = function (dateStart, dateEnd, ids, cb) {
-
-        Constime.find({
-            where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd }, consID: { inq: ids }, open: true },
-            order: 'startDate'
-        }, cb);
+        if (_.isEmpty(ids)) {
+            var stf = app.models.staffuser;
+            stf.find({
+                include: {
+                    relation: 'slots',
+                    scope: {
+                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd }, open: true },
+                        order: 'startDate'
+                    }
+                },
+                where: {type: "consultant" }
+            }, cb);
+        }
+        else {
+            var stf = app.models.staffuser;
+            stf.find({
+                include: {
+                    relation: 'slots',
+                    scope: {
+                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd }, open: true },
+                        order: 'startDate'
+                    }
+                },
+                where: { id: { inq: ids } , type: "consultant" }
+            }, cb);
+        }
 
     };
 
@@ -29,15 +50,15 @@ module.exports = function (Constime) {
         returns: { arg: 'readCalander', type: 'array' }
     });
 
-    function dst(s,e,id) {
-        Constime.destroyAll({startDate: { gte: s }, endDate: { lte: e }, consID: id });
+    function dst(s, e, id) {
+        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consID: id });
     }
 
-    function updt(s,e,id){
-        Constime.updateAll({ startDate: { gte: s , lt: e }, endDate: { gt: e }, consID: id },
+    function updt(s, e, id) {
+        Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consID: id },
             { startDate: e });
 
-        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e , gt: s }, consID: id },
+        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consID: id },
             { endDate: s });
 
     }
@@ -45,7 +66,7 @@ module.exports = function (Constime) {
         var s, e;
         s = new Date(ctx.args.data.startDate);
         e = new Date(ctx.args.data.endDate);
-        
+
         if (s.getMinutes() < 15) {
             s.setMinutes(0);
         }
@@ -75,8 +96,8 @@ module.exports = function (Constime) {
         ctx.args.data.startDate = s;
         ctx.args.data.endDate = e;
         var id = ctx.args.data.consID;
-        dst(s,e,id);
-        updt(s,e,id);
+        dst(s, e, id);
+        updt(s, e, id);
         next();
     })
     function cc(elm) {
@@ -84,13 +105,13 @@ module.exports = function (Constime) {
             if (err) throw err;
         });
     }
-    
+
     Constime.afterRemote('create', function (ctx, ctime, next) {
 
         var d = ctime.startDate;
         var d1 = moment(d).add(30, 'm').toDate();
 
-        while (d1 <= ctime.endDate) {
+        while (d1 < ctime.endDate) {
 
             if (d.getHours() == 23) {
 
@@ -120,8 +141,7 @@ module.exports = function (Constime) {
                 clientID: ctime.clientID
 
             }
-            if (d1<=ctime.endDate)
-                cc(elm);
+            cc(elm);
             d = d1;
         }
         Constime.destroyById(ctime.id, function (err, ob) {

@@ -7,125 +7,128 @@
     "strictObjectIDCoercion": true
   },
   "properties": {
-    "DateOfArr": {
+    "dateOfArr": {
       "type": "date"
     },
-    "Status": {
+    "status": {
       "type": "string"
     },
-    "DateOfProc": {
+    "dateOfProc": {
       "type": "date"
     },
-    "Deleted": {
+    "deleted": {
       "type": "boolean",
       "default": false
     },
-    "TextBoxClient": {
+    "textBoxClient": {
       "type": "string"
     },
-    "TextBoxAdmin": {
+    "textBoxAdmin": {
       "type": "string"
     },
-    "AdminId": {
+    "clientId": {
       "type": "string"
     },
-    "NameFarsi": {
+    "adminId": {
       "type": "string"
     },
-    "SurnameFarsi": {
+    "nameFarsi": {
       "type": "string"
     },
-    "NameEnglish": {
+    "surnameFarsi": {
       "type": "string"
     },
-    "SurnameEnglish": {
+    "nameEnglish": {
       "type": "string"
     },
-    "DateOfBirthPer": {
+    "surnameEnglish": {
+      "type": "string"
+    },
+    "dateOfBirthPer": {
       "type": "date"
     },
-    "DateOfBirthGre": {
+    "dateOfBirthGre": {
       "type": "date"
     },
-    "MaritalStatus": {
+    "maritalStatus": {
       "type": "string"
     },
-    "NumberOfChildren": {
+    "numberOfChildren": {
       "type": "number"
     },
-    "MobileNo": {
+    "mobileNo": {
       "type": "string"
     },
-    "LandlinePhoneNo": {
+    "lLandlinePhoneNo": {
       "type": "string"
     },
-    "Email": {
+    "email": {
       "type": "string"
     },
-    "SkypeID": {
+    "skypeID": {
       "type": "string"
     },
-    "ResidentialAddressFarsi": {
+    "residentialAddressFarsi": {
       "type": "string"
     },
-    "ResidentialAddressEnglish": {
+    "residentialAddressEnglish": {
       "type": "string"
     },
     "goodEnglish": {
       "type": "string"
     },
-    "GradeEn": {
+    "gradeEn": {
       "type": "number"
     },
-    "WritingEn": {
+    "writingEn": {
       "type": "number"
     },
-    "ListeningEn": {
+    "listeningEn": {
       "type": "number"
     },
-    "ReadingEn": {
+    "readingEn": {
       "type": "number"
     },
-    "SpeakingEn": {
+    "speakingEn": {
       "type": "number"
     },
-    "OverallEn": {
+    "overallEn": {
       "type": "number"
     },
-    "AssocField": {
+    "assocField": {
       "type": "string"
     },
-    "AssocUniversity": {
+    "assocUniversity": {
       "type": "string"
     },
-    "AssocCityOfUniversity": {
+    "assocCityOfUniversity": {
       "type": "string"
     },
-    "AssocYearOfGraduation": {
+    "assocYearOfGraduation": {
       "type": "number"
     },
-    "BacField": {
+    "bacField": {
       "type": "string"
     },
-    "BacUniversity": {
+    "bacUniversity": {
       "type": "string"
     },
-    "BacCityOfUniversity": {
+    "bacCityOfUniversity": {
       "type": "string"
     },
-    "BacYearOfGraduation": {
+    "bacYearOfGraduation": {
       "type": "number"
     },
-    "MasterField": {
+    "masterField": {
       "type": "string"
     },
-    "MasterUniversity": {
+    "masterUniversity": {
       "type": "string"
     },
-    "MasterCityOfUniversity": {
+    "masterCityOfUniversity": {
       "type": "string"
     },
-    "MasterYearOfGraduation": {
+    "masterYearOfGraduation": {
       "type": "number"
     },
     "PHDField": {
@@ -140,49 +143,49 @@
     "PHDYearOfGraduation": {
       "type": "number"
     },
-    "FieldOfWorking": {
+    "fieldOfWorking": {
       "type": "string"
     },
-    "RelatedEdYearsPaid": {
+    "relatedEdYearsPaid": {
       "type": "number"
     },
-    "RelatedEdYearsNonPaid": {
+    "relatedEdYearsNonPaid": {
       "type": "number"
     },
-    "NonRelatedEdYearsPaid": {
+    "nonRelatedEdYearsPaid": {
       "type": "number"
     },
-    "NonRelatedEdYearsNonPaid": {
+    "nonRelatedEdYearsNonPaid": {
       "type": "number"
     },
-    "MilitaryStatus": {
+    "militaryStatus": {
       "type": "string"
     },
-    "MilitaryPlace": {
+    "militaryPlace": {
       "type": "number"
     },
-    "MilitaryDurationFrom": {
+    "militaryDurationFrom": {
       "type": "number"
     },
-    "MilitaryDurationTo": {
+    "militaryDurationTo": {
       "type": "number"
     },
-    "SignificantCurrentSickness": {
+    "significantCurrentSickness": {
       "type": "string"
     },
-    "SurgeryPastOrFuture": {
+    "surgeryPastOrFuture": {
       "type": "string"
     },
-    "AustraliaFamilyRelation": {
+    "australiaFamilyRelation": {
       "type": "string"
     },
-    "AustraliaLivingState": {
+    "australiaLivingState": {
       "type": "string"
     },
-    "AustraliaLivingCity": {
+    "australiaLivingCity": {
       "type": "string"
     },
-    "AustraliaVisaType": {
+    "australiaVisaType": {
       "type": "string"
     }
   },
@@ -191,7 +194,7 @@
     "Client": {
       "type": "belongsTo",
       "model": "client",
-      "foreignKey": "ClientId"
+      "foreignKey": "clientId"
     }
   },
   "acls": [
@@ -255,7 +258,33 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "secretary",
+      "permission": "ALLOW"
     }
+    
+
   ],
   "methods": {}
 }

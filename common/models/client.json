@@ -7,13 +7,13 @@
     "strictObjectIDCoercion": true
   },
   "properties": {
-    "Mobile": {
-      "type": "string",
-      "required": true
+    "mobile": {
+      "type": "string"
+      
     },
-    "FormID": {
-      "type": "string",
-      "required": true
+    "formID": {
+      "type": "string"
+      
     }
   },
   "validations": [],
@@ -21,7 +21,7 @@
     "forms": {
       "type": "hasMany",
       "model": "forms",
-      "foreignKey": "ClientId"
+      "foreignKey": "clientId"
     }
   },
   "acls": [

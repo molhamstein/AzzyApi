@@ -20,15 +20,24 @@
       "type": "boolean",
       "default": true
     },
-    "consID":{
+    "consID": {
       "type": "string"
     },
-    "clientID":{
+    "clientID": {
       "type": "string"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "consultant": {
+      "type": "belongsTo",
+      "model": "staffuser",
+      "foreignKey": "consID",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
   "acls": [
     {
       "accessType": "*",
@@ -84,6 +93,12 @@
       "principalId": "adminstrator",
       "permission": "ALLOW",
       "property": "ocCalander"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW"
     }
   ],
   "methods": {}

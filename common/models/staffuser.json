@@ -7,12 +7,27 @@
     "strictObjectIDCoercion": true
   },
   "properties": {
-    "Type": {
+    "type": {
+      "type": "string"
+    },
+    "primarycolor": {
+      "type": "string"
+    },
+    "secondarycolor": {
       "type": "string"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "slots": {
+      "type": "hasMany",
+      "model": "consTime",
+      "foreignKey": "consID",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
   "acls": [
     {
       "accessType": "*",

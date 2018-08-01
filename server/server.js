@@ -5,6 +5,21 @@ var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
 
+app.use(loopback.token());
+app.use(function(req, res, next) {
+    var token = req.accessToken;
+    if (!token) {
+        return next();
+    }
+    var now = new Date();
+    if ( now.getTime() - token.created.getTime() < 1000 ) {
+        return next();
+    }
+    req.accessToken.created = now;
+    req.accessToken.ttl     = 94608000; //three years
+    req.accessToken.save(next);
+});
+
 app.start = function() {
   // start the web server
   return app.listen(function() {

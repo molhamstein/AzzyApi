@@ -7,6 +7,10 @@ var ACL = app.models.ACL;
 
 module.exports = function (Staffuser) {
     Staffuser.userDef = function () { };
+    Staffuser.validatesInclusionOf('type', {
+        in: ['manager', 'consultant', 'adminstrator', 'secretary'],
+        message: 'not valid type'
+    });
 
 
     /**
@@ -21,29 +25,29 @@ module.exports = function (Staffuser) {
         var RoleMapping = app.models.RoleMapping;
 
         Staffuser.findOne({ where: { id: userId } }, function (err, user) { // Find the user...
-            if (err) return cb(err); 
+            if (err) return cb(err);
 
             if (!_.isEmpty(user)) {
                 Role.findOne({ where: { id: roleId } }, function (err, role) { // Find the role...
-                    if (err) return cb(err); 
+                    if (err) return cb(err);
 
                     if (!_.isEmpty(role)) {
                         RoleMapping.findOne({ where: { principalId: userId, roleId: roleId } }, function (err, roleMapping) { // Find the role mapping...
-                            if (err) return cb(err); 
+                            if (err) return cb(err);
 
                             if (_.isEmpty(roleMapping)) { // Only create if one doesn't exist to avoid duplicates
                                 role.principals.create({
                                     principalType: RoleMapping.USER,
                                     principalId: user.id
                                 }, function (err, principal) {
-                                    if (err) return cb(err); 
-                                    
+                                    if (err) return cb(err);
+
                                     return cb(null, role); // Success, return role object
-                                    
+
                                 });
                             } else {
                                 return cb(null, role); // Success, return role object
-                               
+
                             }
                         });
 
@@ -77,65 +81,79 @@ module.exports = function (Staffuser) {
     );
 
 
-      /**
-   * Remove a user from the given role.
-   * @param {string} userId
-   * @param {string} roleId
-   * @param {Function} cb
-   */
-  Staffuser.removeRole = function(userId, roleId, cb) {
-    var error;
-    var Role = app.models.Role;
-    var RoleMapping = app.models.RoleMapping;
+    /**
+ * Remove a user from the given role.
+ * @param {string} userId
+ * @param {string} roleId
+ * @param {Function} cb
+ */
+    Staffuser.removeRole = function (userId, roleId, cb) {
+        var error;
+        var Role = app.models.Role;
+        var RoleMapping = app.models.RoleMapping;
 
-    Staffuser.findOne({ where: { id: userId } }, function(err, user) { // Find the user...
-      if (err) cb(err); 
+        Staffuser.findOne({ where: { id: userId } }, function (err, user) { // Find the user...
+            if (err) cb(err);
 
-      if (!_.isEmpty(user)) {
-        Role.findOne({ where: { id: roleId } }, function(err, role) { // Find the role...
-          if (err) cb(err); 
+            if (!_.isEmpty(user)) {
+                Role.findOne({ where: { id: roleId } }, function (err, role) { // Find the role...
+                    if (err) cb(err);
 
-          if (!_.isEmpty(role)) {
-            RoleMapping.findOne({ where: { principalId: userId, roleId: roleId } }, function(err, roleMapping) { // Find the role mapping...
-              if (err) cb(err); 
+                    if (!_.isEmpty(role)) {
+                        RoleMapping.findOne({ where: { principalId: userId, roleId: roleId } }, function (err, roleMapping) { // Find the role mapping...
+                            if (err) cb(err);
 
-              if (!_.isEmpty(roleMapping)) {
-                roleMapping.destroy(function(err) {
-                  if (err) cb(err); 
+                            if (!_.isEmpty(roleMapping)) {
+                                roleMapping.destroy(function (err) {
+                                    if (err) cb(err);
 
-                  cb(null, role); // Success, return role object
+                                    cb(null, role); // Success, return role object
+                                });
+                            } else {
+                                cb(null, role); // Success, return role object
+                            }
+                        });
+                    } else {
+                        error = new Error('Role.' + roleId + ' was not found.');
+                        error.http_code = 404;
+                        cb(error);
+                    }
                 });
-              } else {
-                cb(null, role); // Success, return role object
-              }
-            });
-          } else {
-            error = new Error('Role.' + roleId + ' was not found.');
-            error.http_code = 404;
-            cb(error); 
-          }
+            } else {
+                error = new Error('User.' + userId + ' was not found.');
+                error.http_code = 404;
+                cb(error);
+            }
         });
-      } else {
-        error = new Error('User.' + userId + ' was not found.');
-        error.http_code = 404;
-        cb(error); 
-      }
-    });
-  };
+    };
 
-  Staffuser.remoteMethod(
-    'removeRole',
-    {
-      accepts: [
-        {arg: 'userId', type: 'string'},
-        {arg: 'roleId', type: 'string'}
-      ],
-      http: {
-        path: '/remove-role',
-        verb: 'post'
-      }
-    }
-  );
+    Staffuser.remoteMethod(
+        'removeRole',
+        {
+            accepts: [
+                { arg: 'userId', type: 'string' },
+                { arg: 'roleId', type: 'string' }
+            ],
+            http: {
+                path: '/remove-role',
+                verb: 'post'
+            }
+        }
+    );
+    Staffuser.afterRemote('create', function (ctx, user, next) {
+        var Role = app.models.Role;
+        Role.find({ where: { name: user.type } }, function (err, res) {
+            if (err) throw err;
+            if (!_.isEmpty(res)) {
+                Staffuser.addRole(user.id, res[0].id, function (er, r) {
+                    if (er) throw er;
+                });
+            }
+        });
+        next();
+    });
+
 };
+
 
 

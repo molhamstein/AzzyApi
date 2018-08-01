@@ -5,18 +5,18 @@ module.exports = function (Forms) {
 
 
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    Forms.validatesFormatOf('Email', { with: re, message: 'Must provide a valid email' });
-    Forms.validatesUniquenessOf('MobileNo');
-    Forms.validatesUniquenessOf('Email');
+    Forms.validatesFormatOf('email', { with: re, message: 'Must provide a valid email' });
+    Forms.validatesUniquenessOf('mobileNo');
+    Forms.validatesUniquenessOf('email');
     Forms.readForms = function (cb) {
         Forms.find({
             fields: {
-                AdminId: false,
-                ClientID: false,
-                TextBoxAdmin: false,
-                Deleted: false,
-                DateOfProc: false,
-                Id: false
+                adminId: false,
+                clientID: false,
+                textBoxAdmin: false,
+                deleted: false,
+                dateOfProc: false,
+                id: false
             }
         }, cb);
     };
@@ -26,17 +26,19 @@ module.exports = function (Forms) {
     });
 
 
-
     Forms.afterRemote('create', function (ctx, form, next) {
         let client = app.models.client;
         client.create({
-            Mobile: form.MobileNo,
-            FormID: form.id,
+            mobile: form.mobileNo,
+            formID: form.id,
             password: "0000",
-            email: form.Email
+            email: form.email
         }, function (err, resClient) {
             if (err) throw err;
-
+            
+            Forms.updateAll({id: form.id} , {clientId: resClient.id});
+        });
+            /*
             let formClient = app.models.formClient;
             formClient.create({
                 formID: form.id,

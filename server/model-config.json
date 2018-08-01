@@ -57,6 +57,6 @@
   },
   "formClient": {
     "dataSource": "mongoDS",
-    "public": true
+    "public": false
   }
 }
