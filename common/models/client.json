@@ -9,11 +9,9 @@
   "properties": {
     "mobile": {
       "type": "string"
-      
     },
     "formID": {
       "type": "string"
-      
     }
   },
   "validations": [],

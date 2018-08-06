@@ -12,5 +12,20 @@
     "name": "mongoDS",
     "user": "",
     "connector": "mongodb"
+  },
+  "myEmailDataSource": {
+    "name": "myEmailDataSource",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "SMTP",
+        "secure": true,
+        "port": 465,
+        "auth": {
+          "user": "bshoor96@gmail.com",
+          "pass": "0941405267"
+        }
+      }
+    ]
   }
 }

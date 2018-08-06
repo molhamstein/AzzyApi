@@ -1,7 +1,7 @@
 {
   "name": "forms",
   "base": "PersistedModel",
-  "idInjection": true,
+  "idInjection": false,
   "options": {
     "validateUpsert": true,
     "strictObjectIDCoercion": true
@@ -11,7 +11,8 @@
       "type": "date"
     },
     "status": {
-      "type": "string"
+      "type": "string",
+      "default": ""
     },
     "dateOfProc": {
       "type": "date"
@@ -237,21 +238,108 @@
       "principalType": "ROLE",
       "principalId": "manager",
       "permission": "ALLOW",
-      "property": "writeForms"
+      "property": "changeStatusToProc"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "adminstrator",
       "permission": "ALLOW",
-      "property": "writeForms"
+      "property": "changeStatusToProc"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "consultant",
       "permission": "ALLOW",
-      "property": "writeForms"
+      "property": "changeStatusToProc"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "changeStatusToContracts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "changeStatusToContracts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "changeStatusToContracts"
+    },
+    
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "getUnprocessedForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "getUnprocessedForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "getUnprocessedForms"
+    },
+
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "getProcessedForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "getProcessedForms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "getProcessedForms"
+    },
+
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "getContracts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "getContracts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "getContracts"
     },
     {
       "accessType": "WRITE",
@@ -283,8 +371,6 @@
       "principalId": "secretary",
       "permission": "ALLOW"
     }
-    
-
   ],
   "methods": {}
 }
