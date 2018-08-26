@@ -195,6 +195,162 @@
     },
     "australiaVisaType": {
       "type": "string"
+    },
+    "nameFarsiSp": {
+      "type": "string"
+    },
+    "surnameFarsiSp": {
+      "type": "string"
+    },
+    "nameEnglishSp": {
+      "type": "string"
+    },
+    "surnameEnglishSp": {
+      "type": "string"
+    },
+    "dateOfBirthPerSp": {
+      "type": "date"
+    },
+    "dateOfBirthGreSp": {
+      "type": "date"
+    },
+    "maritalStatusSp": {
+      "type": "string"
+    },
+    "numberOfChildrenSp": {
+      "type": "number"
+    },
+    "mobileNoSp": {
+      "type": "string"
+    },
+    "lLandlinePhoneNoSp": {
+      "type": "string"
+    },
+    "emailSp": {
+      "type": "string"
+    },
+    "skypeIDSp": {
+      "type": "string"
+    },
+    "residentialAddressFarsiSp": {
+      "type": "string"
+    },
+    "residentialAddressEnglishSp": {
+      "type": "string"
+    },
+    "goodEnglishSp": {
+      "type": "string"
+    },
+    "gradeEnSp": {
+      "type": "number"
+    },
+    "writingEnSp": {
+      "type": "number"
+    },
+    "listeningEnSp": {
+      "type": "number"
+    },
+    "readingEnSp": {
+      "type": "number"
+    },
+    "speakingEnSp": {
+      "type": "number"
+    },
+    "overallEnSp": {
+      "type": "number"
+    },
+    "assocFieldSp": {
+      "type": "string"
+    },
+    "assocUniversitySp": {
+      "type": "string"
+    },
+    "assocCityOfUniversitySp": {
+      "type": "string"
+    },
+    "assocYearOfGraduationSp": {
+      "type": "number"
+    },
+    "bacFieldSp": {
+      "type": "string"
+    },
+    "bacUniversitySp": {
+      "type": "string"
+    },
+    "bacCityOfUniversitySp": {
+      "type": "string"
+    },
+    "bacYearOfGraduationSp": {
+      "type": "number"
+    },
+    "masterFieldSp": {
+      "type": "string"
+    },
+    "masterUniversitySp": {
+      "type": "string"
+    },
+    "masterCityOfUniversitySp": {
+      "type": "string"
+    },
+    "masterYearOfGraduationSp": {
+      "type": "number"
+    },
+    "PHDFieldSp": {
+      "type": "string"
+    },
+    "PHDUniversitySp": {
+      "type": "string"
+    },
+    "PHDCityOfUniversitySp": {
+      "type": "string"
+    },
+    "PHDYearOfGraduationSp": {
+      "type": "number"
+    },
+    "fieldOfWorkingSp": {
+      "type": "string"
+    },
+    "relatedEdYearsPaidSp": {
+      "type": "number"
+    },
+    "relatedEdYearsNonPaidSp": {
+      "type": "number"
+    },
+    "nonRelatedEdYearsPaidSp": {
+      "type": "number"
+    },
+    "nonRelatedEdYearsNonPaidSp": {
+      "type": "number"
+    },
+    "militaryStatusSp": {
+      "type": "string"
+    },
+    "militaryPlaceSp": {
+      "type": "number"
+    },
+    "militaryDurationFromSp": {
+      "type": "number"
+    },
+    "militaryDurationToSp": {
+      "type": "number"
+    },
+    "significantCurrentSicknessSp": {
+      "type": "string"
+    },
+    "surgeryPastOrFutureSp": {
+      "type": "string"
+    },
+    "australiaFamilyRelationSp": {
+      "type": "string"
+    },
+    "australiaLivingStateSp": {
+      "type": "string"
+    },
+    "australiaLivingCitySp": {
+      "type": "string"
+    },
+    "australiaVisaTypeSp": {
+      "type": "string"
     }
   },
   "validations": [],
