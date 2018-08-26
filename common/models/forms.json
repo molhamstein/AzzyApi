@@ -12,7 +12,7 @@
     },
     "status": {
       "type": "string",
-      "default": ""
+      "default": " "
     },
     "dateOfProc": {
       "type": "date"
@@ -27,11 +27,18 @@
     "textBoxAdmin": {
       "type": "string"
     },
+    "textBoxNotes": {
+      "type": "string"
+    },
     "clientId": {
       "type": "string"
     },
-    "adminId": {
+    "consId": {
       "type": "string"
+    },
+    "appointmentId": {
+      "type": "string",
+      "default": " "
     },
     "nameFarsi": {
       "type": "string"
@@ -195,7 +202,18 @@
     "Client": {
       "type": "belongsTo",
       "model": "client",
-      "foreignKey": "clientId"
+      "foreignKey": "clientId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "consTimes": {
+      "type": "belongsTo",
+      "model": "consTime",
+      "foreignKey": "appointmentId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
   "acls": [
@@ -275,7 +293,6 @@
       "permission": "ALLOW",
       "property": "changeStatusToContracts"
     },
-    
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
@@ -297,7 +314,6 @@
       "permission": "ALLOW",
       "property": "getUnprocessedForms"
     },
-
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
@@ -319,7 +335,6 @@
       "permission": "ALLOW",
       "property": "getProcessedForms"
     },
-
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
@@ -340,6 +355,41 @@
       "principalId": "consultant",
       "permission": "ALLOW",
       "property": "getContracts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "changeStatusToConsultation"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW",
+      "property": "changeStatusToConsultation"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW",
+      "property": "changeStatusToConsultation"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "selectAp"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "cancelAp"
     },
     {
       "accessType": "WRITE",
@@ -370,7 +420,16 @@
       "principalType": "ROLE",
       "principalId": "secretary",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "updateOwnForm"
     }
   ],
-  "methods": {}
+  "methods": {
+
+  }
 }

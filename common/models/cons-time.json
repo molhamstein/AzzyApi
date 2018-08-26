@@ -20,11 +20,15 @@
       "type": "boolean",
       "default": true
     },
-    "consID": {
+    "consId": {
       "type": "string"
     },
     "clientID": {
       "type": "string"
+    },
+    "reminder": {
+      "type": "boolean",
+      "default": false
     }
   },
   "validations": [],
@@ -32,7 +36,15 @@
     "consultant": {
       "type": "belongsTo",
       "model": "staffuser",
-      "foreignKey": "consID",
+      "foreignKey": "consId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "forms": {
+      "type": "hasOne",
+      "model": "forms",
+      "foreignKey": "appointmentId",
       "options": {
         "nestRemoting": true
       }

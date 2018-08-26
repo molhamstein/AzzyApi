@@ -51,14 +51,14 @@ module.exports = function (Constime) {
     });
 
     function dst(s, e, id) {
-        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consID: id });
+        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id });
     }
 
     function updt(s, e, id) {
-        Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consID: id },
+        Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consId: id },
             { startDate: e });
 
-        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consID: id },
+        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consId: id },
             { endDate: s });
 
     }
@@ -95,7 +95,7 @@ module.exports = function (Constime) {
 
         ctx.args.data.startDate = s;
         ctx.args.data.endDate = e;
-        var id = ctx.args.data.consID;
+        var id = ctx.args.data.consId;
         dst(s, e, id);
         updt(s, e, id);
         next();
@@ -137,7 +137,7 @@ module.exports = function (Constime) {
                 endDate: d1,
                 location: ctime.location,
                 open: ctime.open,
-                consID: ctime.consID,
+                consId: ctime.consId,
                 clientID: ctime.clientID
 
             }

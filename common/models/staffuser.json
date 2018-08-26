@@ -22,7 +22,7 @@
     "slots": {
       "type": "hasMany",
       "model": "consTime",
-      "foreignKey": "consID",
+      "foreignKey": "consId",
       "options": {
         "nestRemoting": true
       }

@@ -19,10 +19,11 @@
     "transports": [
       {
         "type": "SMTP",
+        "host": "smtp.gmail.com",
         "secure": true,
         "port": 465,
         "auth": {
-          "user": "bshoor96@gmail.com",
+          "user": "bsher.ramadan@gmail.com",
           "pass": "0941405267"
         }
       }

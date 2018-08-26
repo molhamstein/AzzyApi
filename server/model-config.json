@@ -62,5 +62,9 @@
   "Email": {
     "dataSource": "myEmailDataSource",
     "public": true
+  },
+  "counters": {
+    "dataSource": "mongoDS",
+    "public": false
   }
 }
