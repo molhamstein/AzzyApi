@@ -14,6 +14,10 @@ module.exports = function (Forms) {
     Forms.validatesUniquenessOf('mobileNo');
     Forms.validatesUniquenessOf('email');
 
+    Forms.validatesFormatOf('emailSp', { with: re, message: 'Must provide a valid email' });
+    Forms.validatesUniquenessOf('mobileNoSp');
+    Forms.validatesUniquenessOf('emailSp');
+
     Forms.sendEmail = function (emailReciver, sub, ht, cb) {
         Forms.app.models.Email.send({
             to: emailReciver,
