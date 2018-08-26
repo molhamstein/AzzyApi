@@ -35,8 +35,9 @@ module.exports = function (Forms) {
         context.args.data.dateOfArr = Date.now();
         if (context.args.data.status == " ") {
             //context.args.data.dateOfProc = " ";
-            context.args.data.adminId = " ";
+            context.args.data.consId = " ";
             context.args.data.textBoxAdmin = " ";
+            context.args.data.textBoxNotes = " ";
         }
         next();
     });
