@@ -138,7 +138,7 @@ module.exports = function (Constime) {
                 location: ctime.location,
                 open: ctime.open,
                 consId: ctime.consId,
-                clientID: ctime.clientID
+                clientId: ctime.clientId
 
             }
             cc(elm);

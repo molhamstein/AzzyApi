@@ -23,8 +23,9 @@
     "consId": {
       "type": "string"
     },
-    "clientID": {
-      "type": "string"
+    "clientId": {
+      "type": "string",
+      "default": " "
     },
     "reminder": {
       "type": "boolean",

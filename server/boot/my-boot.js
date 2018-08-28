@@ -44,7 +44,7 @@ module.exports = function (app) {
   });
 
   Role.create({
-    name: 'formEdit'
+    name: 'formEditer'
   }, function (err, role) {
     if (err) throw err;
 
@@ -52,7 +52,15 @@ module.exports = function (app) {
   });
 
   Role.create({
-    name: 'appSelect'
+    name: 'appSelecter'
+  }, function (err, role) {
+    if (err) throw err;
+
+    console.log('Created role:', role);
+  });
+
+  Role.create({
+    name: 'appCanceler'
   }, function (err, role) {
     if (err) throw err;
 

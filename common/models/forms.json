@@ -583,9 +583,28 @@
       "principalId": "manager",
       "permission": "ALLOW",
       "property": "updateOwnForm"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "formEditer",
+      "permission": "ALLOW",
+      "property": "updateOwnForm"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "appSelecter",
+      "permission": "ALLOW",
+      "property": "selectAp"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "appCanceler",
+      "permission": "ALLOW",
+      "property": "cancelAp"
     }
   ],
-  "methods": {
-
-  }
+  "methods": {}
 }
