@@ -170,13 +170,13 @@
       "type": "string"
     },
     "militaryPlace": {
-      "type": "number"
+      "type": "string"
     },
     "militaryDurationFrom": {
-      "type": "number"
+      "type": "date"
     },
     "militaryDurationTo": {
-      "type": "number"
+      "type": "date"
     },
     "significantCurrentSickness": {
       "type": "string"
@@ -326,13 +326,13 @@
       "type": "string"
     },
     "militaryPlaceSp": {
-      "type": "number"
+      "type": "string"
     },
     "militaryDurationFromSp": {
-      "type": "number"
+      "type": "date"
     },
     "militaryDurationToSp": {
-      "type": "number"
+      "type": "date"
     },
     "significantCurrentSicknessSp": {
       "type": "string"

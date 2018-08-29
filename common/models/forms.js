@@ -14,10 +14,48 @@ module.exports = function (Forms) {
     Forms.validatesUniquenessOf('mobileNo');
     Forms.validatesUniquenessOf('email');
 
-    Forms.validatesFormatOf('emailSp', { with: re, message: 'Must provide a valid email' });
-    Forms.validatesUniquenessOf('mobileNoSp');
-    Forms.validatesUniquenessOf('emailSp');
+    Forms.validatesInclusionOf('maritalStatus', {
+        in: ['single', 'married', 'divorced', 'widowed'],
+        message: 'not valid marital status'
+    });
+    Forms.validatesInclusionOf('maritalStatusSp', {
+        in: ['single', 'married', 'divorced', 'widowed'],
+        message: 'not valid marital status Sp',
+        allowBlank: true
+    });
+    
+    Forms.validatesInclusionOf('goodEnglish', {
+        in: ['Excellent','Good','Intermediate','Weak'],
+        message: 'not valid goodEnglish'
+    });
+    Forms.validatesInclusionOf('goodEnglishSp', {
+        in: ['Excellent','Good','Intermediate','Weak'],
+        message: 'not valid goodEnglish',
+        allowBlank: true
+    });
 
+    Forms.validatesInclusionOf('militaryStatus', {
+        in: ['Finished', 'Exemption'],
+        message: 'not valid military status'
+    });
+    Forms.validatesInclusionOf('militaryStatusSp', {
+        in: ['Finished', 'Exemption'],
+        message: 'not valid military status Sp',
+        allowBlank: true
+    });
+
+    Forms.validatesInclusionOf('australiaVisaType', {
+        in: ['single', 'married', 'divorced', 'widowed'],
+        message: 'not valid Visa Type'
+    });
+    Forms.validatesInclusionOf('australiaVisaTypeSp', {
+        in: ['Citizen','Permanent Res.','Temporary Res.','Student-Assylum'],
+        message: 'not valid Visa Type Sp',
+        allowBlank: true
+    });
+
+
+    
     Forms.sendEmail = function (emailReciver, sub, ht, cb) {
         Forms.app.models.Email.send({
             to: emailReciver,
@@ -27,7 +65,7 @@ module.exports = function (Forms) {
 
         }, function (err, mail) {
             console.log('email sent!');
-            cb(err);
+            return cb(err);
         });
     }
 
@@ -141,22 +179,22 @@ module.exports = function (Forms) {
 
     Forms.changeStatusToProc = function (formId, statusName, textbox, cb) {
         Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textbox }, function (err, res) {
-            if (err) cb(err);
+            if (err) return cb(err);
             Forms.findById(formId, function (err, form) {
-                if (err) cb(err);
+                if (err) return cb(err);
 
                 var client = app.models.client;
                 client.findById(form.clientId, function (err, resClient) {
-                    if (err) cb(err);
+                    if (err) return cb(err);
                     var act = app.models.AccessToken;
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         var client = app.models.client;
-                        if (err) cb(err);
+                        if (err) return cb(err);
                         if (form.status == "Not eligible") {
                             if (!_.isEmpty(res))
                                 client.logout(res[0].id);
                             client.removeRole(resClient.id, 5, function (err, res) {
-                                if (err) cb(err);
+                                if (err) return cb(err);
                                 var sub = "Request Declined, " + form.nameEnglish + ", " + resClient.clientNumber;
                                 var email2 = {
                                     txt1: "Dear ",
@@ -171,8 +209,8 @@ module.exports = function (Forms) {
                                 var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email2.ejs'));
                                 var html_body = renderer(email2);
                                 Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                    if (err) cb(err);
-                                    cb(null, form);
+                                    if (err) return cb(err);
+                                    return cb(null, form);
                                 });
                             });
 
@@ -199,15 +237,13 @@ module.exports = function (Forms) {
                                 var html_body = renderer(email3);
 
                                 Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                    if (err) cb(err);
-                                    cb(null, form);
+                                    if (err) return cb(err);
+                                    return cb(null, form);
                                 });
                             });
                         }
                     });
-
                 });
-
             });
         });
     }
@@ -224,24 +260,24 @@ module.exports = function (Forms) {
 
     Forms.changeStatusToConsultation = function (formId, textbox, consId, cb) {
         Forms.updateAll({ id: formId }, { status: "consultation", dateOfProc: new Date(), textBoxAdmin: textbox, consId: consId }, function (err, res) {
-            if (err) cb(err);
+            if (err) return cb(err);
             Forms.findById(formId, function (err, form) {
-                if (err) cb(err);
+                if (err) return cb(err);
 
                 var client = app.models.client;
                 client.findById(form.clientId, function (err, resClient) {
-                    if (err) cb(err);
+                    if (err) return cb(err);
                     var act = app.models.AccessToken;
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
-                        if (err) cb(err);
+                        if (err) return cb(err);
                         if (!_.isEmpty(res))
                             client.logout(res[0].id);
                         client.login({ email: resClient.email, password: '0000', ttl: 1209600 }, function (err, t) {
-                            if (err) cb(err);
+                            if (err) return cb(err);
                             client.removeRole(resClient.id, 5, function (err, res) {
-                                if (err) cb(err);
+                                if (err) return cb(err);
                                 client.addRole(resClient.id, 6, function (err, res) {
-                                    if (err) cb(err);
+                                    if (err) return cb(err);
                                     var sub = "Your Appointment Request, " + form.nameEnglish + ", " + resClient.clientNumber;
                                     var email4 = {
                                         txt1: "Dear ",
@@ -259,22 +295,16 @@ module.exports = function (Forms) {
                                     var html_body = renderer(email4);
 
                                     Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                        if (err) cb(err);
-                                        cb(null, form);
+                                        if (err) return cb(err);
+                                        return cb(null, form);
                                     });
                                 });
-
                             });
-
                         });
-
                     });
-
                 });
-
             });
         });
-
     }
 
     Forms.remoteMethod('changeStatusToConsultation', {
@@ -341,12 +371,35 @@ module.exports = function (Forms) {
                         var cons = app.models.consTime;
                         cons.updateAll({ startDate: { lte: moment(d).add(3, 'd').toDate() }, reminder: false }, { reminder: true });
                     });
-
                 }
             });
-
         });
+        Forms.find({
+            include: [{
+                relation: 'consTimes',
+                scope: {
+                    include: {
+                        relation: 'consultant'
+                    },
+                    where: { startDate: { lte: moment(d).add(2, 'd').toDate() } }
+                }
+            }, {
+                relation: 'Client'
+            }],
+            where: { status: "consultation" }
+        }, function (err, res) {
+            if (err) throw err;
 
+            res.forEach(function (form) {
+                var f = form.toJSON();
+                if (!_.isEmpty(f.consTimes)) {
+                    var client = app.models.client;
+                    client.removeRole(f.Client.id, 6, function (err, res) {
+                        if (err) throw err;
+                    })
+                }
+            });
+        });
     });
 
     Forms.remoteMethod('changeStatusToContracts', {
@@ -359,7 +412,7 @@ module.exports = function (Forms) {
 
     Forms.selectAp = function (formId, apId, cb) {
         Forms.updateAll({ id: formId }, { appointmentId: apId }, function (err, info) {
-            if (err) cb(err);
+            if (err) return cb(err);
             Forms.findOne({
                 where: { id: formId }, include: [{
                     relation: 'consTimes',
@@ -372,27 +425,31 @@ module.exports = function (Forms) {
                     relation: 'Client'
                 }]
             }, function (err, f) {
-                if (err) cb(err);
+                if (err) return cb(err);
                 var form = f.toJSON();
 
                 var client = app.models.client;
                 var act = app.models.AccessToken;
                 act.find({ where: { userId: form.Client.id } }, function (err, res) {
-                    if (err) cb(err);
-                    if (!_.isEmpty(res))
-                        client.logout(res[0].id);
+                    if (err) return cb(err);
+
                     var d = new Date();
                     var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
-                    if (p < 0) {
-                        cb(new Error("appointment is expired"))
+                    if (p < -2 * 3600 * 24) {
+                        return cb(new Error("appointment is expired"))
                     }
+                    else if (p < 0) {
+                        p = 0;
+                    }
+                    if (!_.isEmpty(res))
+                        client.logout(res[0].id);
                     client.login({ email: form.Client.email, password: '0000', ttl: p }, function (err, t) {
-                        if (err) cb(err);
+                        if (err) return cb(err);
                         client.addRole(form.Client.id, 7, function (err, res) {
-                            if (err) cb(err);
+                            if (err) return cb(err);
                             var con = app.models.consTime;
                             con.updateAll({ consId: form.consId }, { clientId: form.Client.id }, function (err, info) {
-                                if (err) cb(err);
+                                if (err) return cb(err);
                                 var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
                                 var email5 = {
                                     txt1: "Dear ",
@@ -415,19 +472,15 @@ module.exports = function (Forms) {
                                 var html_body = renderer(email5);
 
                                 Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                    if (err) throw err;
-                                    cb(null, form);
+                                    if (err) return cb(err);
+                                    return cb(null, form);
                                 });
                             });
-
                         });
-
                     });
                 });
             });
         });
-
-
     }
     Forms.remoteMethod('selectAp', {
         accepts: [
@@ -444,42 +497,47 @@ module.exports = function (Forms) {
 
     Forms.cancelAp = function (formId, cb) {
         Forms.updateAll({ id: formId }, { appointmentId: " " }, function (err, info) {
-            if (err) cb(err);
+            if (err) return cb(err);
 
-            Forms.findById(formId, function (err2, f) {
-                if (err2) cb(err2)
+            Forms.findById(formId, function (err, f) {
+                if (err) return cb(err)
                 var client = app.models.client;
                 client.findById(f.clientId, function (err, resClient) {
-                    if (err) cb(err);
+                    if (err) return cb(err);
                     var act = app.models.AccessToken;
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
-                        if (err) cb(err);
-                        if (!_.isEmpty(res))
-                            client.logout(res[0].id);
-                        client.removeRole(resClient.id, 7, function (err, res) {
-                            if (err) cb(err);
-                            client.login({ email: resClient.email, password: '0000', ttl: 3600 * 24 * 365 * 2 }, function (err, t) {
+                        if (err) return cb(err);
+                        var cons = app.models.consTime;
+                        cons.updateAll({ clientId: f.clientId }, { clientId: " " }, function (err, info) {
+                            if (err) return cb(err);
+                            if (!_.isEmpty(res))
+                                client.logout(res[0].id);
+                            client.removeRole(resClient.id, 7, function (err, res) {
+                                if (err) return cb(err);
+                                client.login({ email: resClient.email, password: '0000', ttl: 3600 * 24 * 365 * 2 }, function (err, t) {
 
-                                if (err) cb(err);
+                                    if (err) return cb(err);
 
-                                var sub = "Your Appointment cancel, " + f.nameEnglish + ", " + resClient.clientNumber;
+                                    var sub = "Your Appointment cancel, " + f.nameEnglish + ", " + resClient.clientNumber;
 
-                                var email7 = {
-                                    txt1: "Dear " + f.nameEnglish + ", your appointment has been cancelled.",
-                                    txt2: "You can re-schedule an Appointment by clicking on below Link:",
-                                    calandarLink: config.baseURL + '/calandar/' + f.consId + '?token=' + t.id,
-                                    txt3: "Best regards",
-                                    txt4: "Azzy Immigration"
-                                };
-                                var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
-                                var html_body = renderer(email7);
+                                    var email7 = {
+                                        txt1: "Dear " + f.nameEnglish + ", your appointment has been cancelled.",
+                                        txt2: "You can re-schedule an Appointment by clicking on below Link:",
+                                        calandarLink: config.baseURL + '/calandar/' + f.consId + '?token=' + t.id,
+                                        txt3: "Best regards",
+                                        txt4: "Azzy Immigration"
+                                    };
+                                    var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
+                                    var html_body = renderer(email7);
 
-                                Forms.sendEmail(f.email, sub, html_body, function (err) {
-                                    if (err) cb(err);
-                                    cb(null, f);
+                                    Forms.sendEmail(f.email, sub, html_body, function (err) {
+                                        if (err) return cb(err);
+                                        return cb(null, f);
+                                    });
                                 });
                             });
                         });
+
 
                     });
 
