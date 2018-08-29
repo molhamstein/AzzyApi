@@ -67,7 +67,7 @@ module.exports = function (app) {
     console.log('Created role:', role);
   });
 
-  var managers = [{ username: 'manager', email: 'manager@foo.com', password: 'foo', emailVerified: true }];
+  var managers = [{ username: 'manager', email: 'admin@azzy.com', password: 'password', emailVerified: true }];
   User.findOne({ where: { email: managers[0].email } }, function (err, manager) {
     if (err) throw err;
 
