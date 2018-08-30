@@ -87,31 +87,42 @@
       "property": "create"
     },
     {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "manager",
-      "permission": "ALLOW",
-      "property": "ocCalander"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "consultant",
-      "permission": "ALLOW",
-      "property": "ocCalander"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "adminstrator",
-      "permission": "ALLOW",
-      "property": "ocCalander"
-    },
-    {
       "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "manager",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "adminstrator",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "consultant",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "fetchApClientNo"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "fetchApAct"
     }
   ],
   "methods": {}
