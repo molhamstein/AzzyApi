@@ -114,18 +114,11 @@ module.exports = function (Constime) {
         while (d1 < ctime.endDate) {
 
             if (d.getHours() == 23) {
-
-
                 var tmp = moment(d);
                 tmp.add(1, 'd');
-
                 tmp.hour(10);
                 tmp.minute(0);
                 d = tmp.toDate();
-
-
-
-
             }
             else if (d.getHours() < 10) {
                 d.setHours(10);
@@ -153,6 +146,50 @@ module.exports = function (Constime) {
 
     Constime.writeCalander = function () { };
     Constime.ocCalander = function () { };
+
+    Constime.fetchApAct = function(token , cb) {
+        var act = app.models.AccessToken;
+        act.findById(token, function(err , res){
+            if (err) return cb(err);
+            if (_.isEmpty(res)) return cb(new Error("token not found"));
+
+            Constime.find({where: {clientId: res[0].userId}}, function(err,res){
+                if (err) return cb(err);
+                if (_.isEmpty(res)) return cb("the client does not have an appointment");
+                return cb (null, res);
+            })
+        });
+    }
+
+    Constime.remoteMethod('fetchApAct', {
+        accepts: [
+            { arg: 'token', type: 'any' }
+        ],
+        returns: { arg: 'fetchApAct', type: 'object' },
+        http: { path: '/fetchApAct', verb: 'get' }
+    });
+
+
+    Constime.fetchApClientNo = function(num , cb) {
+        var client = app.models.client;
+        client.find({where: {clientNumber: num}},function(err,res){
+            if (err) return cb(err);
+            if (_.isEmpty(res)) return cb(new Error("client not found"));
+            Constime.find({where: {clientId: res[0].id}}, function(err,res){
+                if (err) return cb(err);
+                if (_.isEmpty(res)) return cb("the client does not have an appointment");
+                return cb (null, res);
+            });
+        });
+    }
+
+    Constime.remoteMethod('fetchApClientNo', {
+        accepts: [
+            { arg: 'clientNo', type: 'number' }
+        ],
+        returns: { arg: 'fetchApClientNo', type: 'object' },
+        http: { path: '/fetchApClientNo', verb: 'get' }
+    });
 
 
 

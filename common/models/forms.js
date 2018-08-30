@@ -45,7 +45,7 @@ module.exports = function (Forms) {
     });
 
     Forms.validatesInclusionOf('australiaVisaType', {
-        in: ['single', 'married', 'divorced', 'widowed'],
+        in: ['Citizen','Permanent Res.','Temporary Res.','Student-Assylum'],
         message: 'not valid Visa Type'
     });
     Forms.validatesInclusionOf('australiaVisaTypeSp', {
@@ -448,7 +448,7 @@ module.exports = function (Forms) {
                         client.addRole(form.Client.id, 7, function (err, res) {
                             if (err) return cb(err);
                             var con = app.models.consTime;
-                            con.updateAll({ consId: form.consId }, { clientId: form.Client.id }, function (err, info) {
+                            con.updateAll({ id: apId }, { clientId: form.Client.id }, function (err, info) {
                                 if (err) return cb(err);
                                 var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
                                 var email5 = {
