@@ -23,13 +23,13 @@ module.exports = function (Forms) {
         message: 'not valid marital status Sp',
         allowBlank: true
     });
-    
+
     Forms.validatesInclusionOf('goodEnglish', {
-        in: ['Excellent','Good','Intermediate','Weak'],
+        in: ['Excellent', 'Good', 'Intermediate', 'Weak'],
         message: 'not valid goodEnglish'
     });
     Forms.validatesInclusionOf('goodEnglishSp', {
-        in: ['Excellent','Good','Intermediate','Weak'],
+        in: ['Excellent', 'Good', 'Intermediate', 'Weak'],
         message: 'not valid goodEnglish',
         allowBlank: true
     });
@@ -45,17 +45,17 @@ module.exports = function (Forms) {
     });
 
     Forms.validatesInclusionOf('australiaVisaType', {
-        in: ['Citizen','Permanent Res.','Temporary Res.','Student-Assylum'],
+        in: ['Citizen', 'Permanent Res.', 'Temporary Res.', 'Student-Assylum'],
         message: 'not valid Visa Type'
     });
     Forms.validatesInclusionOf('australiaVisaTypeSp', {
-        in: ['Citizen','Permanent Res.','Temporary Res.','Student-Assylum'],
+        in: ['Citizen', 'Permanent Res.', 'Temporary Res.', 'Student-Assylum'],
         message: 'not valid Visa Type Sp',
         allowBlank: true
     });
 
 
-    
+
     Forms.sendEmail = function (emailReciver, sub, ht, cb) {
         Forms.app.models.Email.send({
             to: emailReciver,
@@ -411,76 +411,90 @@ module.exports = function (Forms) {
     });
 
     Forms.selectAp = function (formId, apId, cb) {
-        Forms.updateAll({ id: formId }, { appointmentId: apId }, function (err, info) {
+        Forms.findById(formId, function (err, res) {
             if (err) return cb(err);
-            Forms.findOne({
-                where: { id: formId }, include: [{
-                    relation: 'consTimes',
-                    scope: {
-                        include: {
-                            relation: 'consultant'
-                        }
-                    }
-                }, {
-                    relation: 'Client'
-                }]
-            }, function (err, f) {
-                if (err) return cb(err);
-                var form = f.toJSON();
-
-                var client = app.models.client;
-                var act = app.models.AccessToken;
-                act.find({ where: { userId: form.Client.id } }, function (err, res) {
+            if (!res) return cb(new Error("form not found"))
+            var consFormId = res.consId;
+            var cons = app.models.consTime;
+            cons.findById(apId, function (err, res) {
+                if (err) return cb(err)
+                if (!res) return cb(new Error("appointment not found"))
+                var consApId = res.consId;
+                if (consApId != consFormId)
+                    return cb(new Error("appointment not found"));
+                Forms.updateAll({ id: formId }, { appointmentId: apId }, function (err, info) {
                     if (err) return cb(err);
-
-                    var d = new Date();
-                    var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
-                    if (p < -2 * 3600 * 24) {
-                        return cb(new Error("appointment is expired"))
-                    }
-                    else if (p < 0) {
-                        p = 0;
-                    }
-                    if (!_.isEmpty(res))
-                        client.logout(res[0].id);
-                    client.login({ email: form.Client.email, password: '0000', ttl: p }, function (err, t) {
+                    Forms.findOne({
+                        where: { id: formId }, include: [{
+                            relation: 'consTimes',
+                            scope: {
+                                include: {
+                                    relation: 'consultant'
+                                }
+                            }
+                        }, {
+                            relation: 'Client'
+                        }]
+                    }, function (err, f) {
                         if (err) return cb(err);
-                        client.addRole(form.Client.id, 7, function (err, res) {
-                            if (err) return cb(err);
-                            var con = app.models.consTime;
-                            con.updateAll({ id: apId }, { clientId: form.Client.id }, function (err, info) {
-                                if (err) return cb(err);
-                                var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
-                                var email5 = {
-                                    txt1: "Dear ",
-                                    clientName: form.nameEnglish,
-                                    clientSurname: form.surnameEnglish,
-                                    txt2: "Thank you scheduling a Consultation with us:",
-                                    txt3: "Location: " + form.consTimes.location,
-                                    txt4: "Your Contact Partner: " + form.consTimes.consultant.username,
-                                    txt5: "Date: " + form.consTimes.startDate.toDateString(),
-                                    txt6: "Time: " + form.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
-                                    txt7: "You can change your appointment by clicking on below link:",
-                                    calandarLink: config.baseURL + '/calandar/' + form.consId + '?token=' + t.id,
-                                    txt8: "You will receive an email prior to your appointment as a reminder",
-                                    txt9: "You can cancel your Appointment by clicking on below link:",
-                                    cancelLink: config.baseURL + '/cancelappointment/' + form.id + '?token=' + t.id,
-                                    txt10: "Best regards",
-                                    txt11: "Azzy Immigration"
-                                };
-                                var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
-                                var html_body = renderer(email5);
+                        var form = f.toJSON();
 
-                                Forms.sendEmail(form.email, sub, html_body, function (err) {
+                        var client = app.models.client;
+                        var act = app.models.AccessToken;
+                        act.find({ where: { userId: form.Client.id } }, function (err, res) {
+                            if (err) return cb(err);
+
+                            var d = new Date();
+                            var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
+                            if (p < -2 * 3600 * 24) {
+                                return cb(new Error("appointment is expired"))
+                            }
+                            else if (p < 0) {
+                                p = 0;
+                            }
+                            if (!_.isEmpty(res))
+                                client.logout(res[0].id);
+                            client.login({ email: form.Client.email, password: '0000', ttl: p }, function (err, t) {
+                                if (err) return cb(err);
+                                client.addRole(form.Client.id, 7, function (err, res) {
                                     if (err) return cb(err);
-                                    return cb(null, form);
+                                    var con = app.models.consTime;
+                                    con.updateAll({ id: apId }, { clientId: form.Client.id }, function (err, info) {
+                                        if (err) return cb(err);
+                                        var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
+                                        var email5 = {
+                                            txt1: "Dear ",
+                                            clientName: form.nameEnglish,
+                                            clientSurname: form.surnameEnglish,
+                                            txt2: "Thank you scheduling a Consultation with us:",
+                                            txt3: "Location: " + form.consTimes.location,
+                                            txt4: "Your Contact Partner: " + form.consTimes.consultant.username,
+                                            txt5: "Date: " + form.consTimes.startDate.toDateString(),
+                                            txt6: "Time: " + form.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
+                                            txt7: "You can change your appointment by clicking on below link:",
+                                            calandarLink: config.baseURL + '/calandar/' + form.consId + '?token=' + t.id,
+                                            txt8: "You will receive an email prior to your appointment as a reminder",
+                                            txt9: "You can cancel your Appointment by clicking on below link:",
+                                            cancelLink: config.baseURL + '/cancelappointment/' + form.id + '?token=' + t.id,
+                                            txt10: "Best regards",
+                                            txt11: "Azzy Immigration"
+                                        };
+                                        var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
+                                        var html_body = renderer(email5);
+
+                                        Forms.sendEmail(form.email, sub, html_body, function (err) {
+                                            if (err) return cb(err);
+                                            return cb(null, form);
+                                        });
+                                    });
                                 });
                             });
                         });
                     });
                 });
-            });
-        });
+            })
+        })
+
     }
     Forms.remoteMethod('selectAp', {
         accepts: [
