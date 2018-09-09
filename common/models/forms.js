@@ -13,6 +13,11 @@ module.exports = function (Forms) {
     Forms.validatesFormatOf('email', { with: re, message: 'Must provide a valid email' });
     Forms.validatesUniquenessOf('mobileNo');
     Forms.validatesUniquenessOf('email');
+    Forms.validatesInclusionOf('status', {
+        in: ['unprocessed', 'contracts', 'more info', 'not eligible', 'consultation'],
+        message: 'not valid status',
+        allowBlank: true
+    });
 
     Forms.validatesInclusionOf('maritalStatus', {
         in: ['single', 'married', 'divorced', 'widowed'],
@@ -71,18 +76,21 @@ module.exports = function (Forms) {
 
     Forms.beforeRemote('create', function (context, form, next) {
         context.args.data.dateOfArr = Date.now();
-        context.args.data.status = " ";
-        if (context.args.data.status == " ") {
+        context.args.data.status = "unprocessed";
+        if (context.args.data.status == "unprocessed") {
             //context.args.data.dateOfProc = " ";
-            context.args.data.consId = " ";
-            context.args.data.textBoxAdmin = " ";
-            context.args.data.textBoxNotes = " ";
+            delete context.args.data.dateOfProc;
+            delete context.args.data.consId;
+            delete context.args.data.textBoxAdmin;
+            delete context.args.data.textBoxNotes;
+            delete context.args.data.appointmentId;
+            
         }
         next();
     });
 
     Forms.beforeRemote('updateOwnForm', function (context, form, next) {
-        context.args.data.status = " ";
+        context.args.data.status = "unprocessed";
 
         next();
     });
@@ -154,7 +162,7 @@ module.exports = function (Forms) {
 
 
     Forms.getUnprocessedForms = function (cb) {
-        Forms.find({ where: { status: " " }, order: 'dateOfArr' }, cb);
+        Forms.find({ where: { status: "unprocessed" }, order: 'dateOfArr' }, cb);
     }
     Forms.remoteMethod('getUnprocessedForms', {
         returns: { arg: 'unprocessedForms', type: 'array' },
@@ -162,7 +170,7 @@ module.exports = function (Forms) {
     });
 
     Forms.getProcessedForms = function (cb) {
-        Forms.find({ where: { status: { nin: [" ", "Contracts"] } }, order: 'dateOfArr DESC' }, cb);
+        Forms.find({ where: { status: { nin: ["unprocessed", "contracts"] } }, order: 'dateOfArr DESC' }, cb);
     }
     Forms.remoteMethod('getProcessedForms', {
         returns: { arg: 'processedForms', type: 'array' },
@@ -170,7 +178,7 @@ module.exports = function (Forms) {
     });
 
     Forms.getContracts = function (cb) {
-        Forms.find({ where: { status: "Contracts" }, order: 'dateOfArr' }, cb);
+        Forms.find({ where: { status: "contracts" }, order: 'dateOfArr' }, cb);
     }
     Forms.remoteMethod('getContracts', {
         returns: { arg: 'contracts', type: 'array' },
@@ -190,7 +198,7 @@ module.exports = function (Forms) {
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         var client = app.models.client;
                         if (err) return cb(err);
-                        if (form.status == "Not eligible") {
+                        if (form.status == "not eligible") {
                             if (!_.isEmpty(res))
                                 client.logout(res[0].id);
                             client.removeRole(resClient.id, 5, function (err, res) {
@@ -574,7 +582,7 @@ module.exports = function (Forms) {
         http: { path: '/cancelAp/:id', verb: 'put' }
     });
     Forms.changeStatusToContracts = function (formId, cb) {
-        Forms.updateAll({ id: formId }, { status: "Contracts", dateOfProc: new Date() }, cb);
+        Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date() }, cb);
     }
 
 

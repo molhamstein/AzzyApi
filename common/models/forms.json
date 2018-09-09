@@ -41,52 +41,61 @@
       "default": " "
     },
     "nameFarsi": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "surnameFarsi": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "nameEnglish": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "surnameEnglish": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "dateOfBirthPer": {
-      "type": "date"
+      "type": "date",
+      "required" : true
     },
     "dateOfBirthGre": {
-      "type": "date"
+      "type": "date",
+      "required" : true
     },
     "maritalStatus": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "numberOfChildren": {
       "type": "number"
     },
     "mobileNo": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "lLandlinePhoneNo": {
       "type": "string"
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "skypeID": {
       "type": "string"
     },
     "residentialAddressFarsi": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "residentialAddressEnglish": {
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     "goodEnglish": {
-      "type": "string"
-    },
-    "gradeEn": {
-      "type": "number"
+      "type": "string",
+      "required" : true
     },
     "writingEn": {
       "type": "number"
