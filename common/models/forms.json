@@ -61,8 +61,8 @@
       "required" : true
     },
     "dateOfBirthGre": {
-      "type": "date",
-      "required" : true
+      "type": "date"
+      
     },
     "maritalStatus": {
       "type": "string",
