@@ -21,7 +21,8 @@ module.exports = function (Forms) {
 
     Forms.validatesInclusionOf('maritalStatus', {
         in: ['single', 'married', 'divorced', 'widowed'],
-        message: 'not valid marital status'
+        message: 'not valid marital status',
+        allowBlank: true
     });
     Forms.validatesInclusionOf('maritalStatusSp', {
         in: ['single', 'married', 'divorced', 'widowed'],
@@ -41,7 +42,8 @@ module.exports = function (Forms) {
 
     Forms.validatesInclusionOf('militaryStatus', {
         in: ['Finished', 'Exemption'],
-        message: 'not valid military status'
+        message: 'not valid military status',
+        allowBlank: true
     });
     Forms.validatesInclusionOf('militaryStatusSp', {
         in: ['Finished', 'Exemption'],
@@ -51,7 +53,8 @@ module.exports = function (Forms) {
 
     Forms.validatesInclusionOf('australiaVisaType', {
         in: ['Citizen', 'Permanent Res.', 'Temporary Res.', 'Student-Assylum'],
-        message: 'not valid Visa Type'
+        message: 'not valid Visa Type',
+        allowBlank: true
     });
     Forms.validatesInclusionOf('australiaVisaTypeSp', {
         in: ['Citizen', 'Permanent Res.', 'Temporary Res.', 'Student-Assylum'],
