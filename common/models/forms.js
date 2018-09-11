@@ -470,7 +470,7 @@ module.exports = function (Forms) {
                                 client.addRole(form.Client.id, 7, function (err, res) {
                                     if (err) return cb(err);
                                     var con = app.models.consTime;
-                                    con.updateAll({ id: apId }, { clientId: form.Client.id }, function (err, info) {
+                                    con.updateAll({ id: apId }, { clientId: form.Client.id , open:false }, function (err, info) {
                                         if (err) return cb(err);
                                         var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
                                         var email5 = {
@@ -533,7 +533,7 @@ module.exports = function (Forms) {
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         if (err) return cb(err);
                         var cons = app.models.consTime;
-                        cons.updateAll({ clientId: f.clientId }, { clientId: " " }, function (err, info) {
+                        cons.updateAll({ clientId: f.clientId }, { clientId: " ", open: true}, function (err, info) {
                             if (err) return cb(err);
                             if (!_.isEmpty(res))
                                 client.logout(res[0].id);
