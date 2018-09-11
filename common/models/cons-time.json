@@ -130,6 +130,13 @@
       "principalId": "manager",
       "permission": "ALLOW",
       "property": "update"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "patchOrCreate"
     }
   ],
   "methods": {}
