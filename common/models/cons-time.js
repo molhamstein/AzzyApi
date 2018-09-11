@@ -14,7 +14,7 @@ module.exports = function (Constime) {
                 include: {
                     relation: 'slots',
                     scope: {
-                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd }, open: true },
+                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd } },
                         order: 'startDate'
                     }
                 },
@@ -27,7 +27,7 @@ module.exports = function (Constime) {
                 include: {
                     relation: 'slots',
                     scope: {
-                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd }, open: true },
+                        where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd } },
                         order: 'startDate'
                     }
                 },
