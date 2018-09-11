@@ -427,7 +427,7 @@ module.exports = function (Forms) {
             if (!res) return cb(new Error("form not found"))
             var consFormId = res.consId;
             var cons = app.models.consTime;
-            cons.updateAll( {clientId: res.clientId}, {clientId: " "}, function(err,info){
+            cons.updateAll( {clientId: res.clientId}, {clientId: null, open: true}, function(err,info){
                 if (err) return cb(err);
                 cons.findById(apId, function (err, res) {
                     if (err) return cb(err)
@@ -537,7 +537,7 @@ module.exports = function (Forms) {
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         if (err) return cb(err);
                         var cons = app.models.consTime;
-                        cons.updateAll({ clientId: f.clientId }, { clientId: " ", open: true}, function (err, info) {
+                        cons.updateAll({ clientId: f.clientId }, { clientId: null, open: true}, function (err, info) {
                             if (err) return cb(err);
                             if (!_.isEmpty(res))
                                 client.logout(res[0].id);
