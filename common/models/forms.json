@@ -42,60 +42,59 @@
     },
     "nameFarsi": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "surnameFarsi": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "nameEnglish": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "surnameEnglish": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "dateOfBirthPer": {
       "type": "date",
-      "required" : true
+      "required": true
     },
     "dateOfBirthGre": {
       "type": "date"
-      
     },
     "maritalStatus": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "numberOfChildren": {
       "type": "number"
     },
     "mobileNo": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "lLandlinePhoneNo": {
       "type": "string"
     },
     "email": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "skypeID": {
       "type": "string"
     },
     "residentialAddressFarsi": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "residentialAddressEnglish": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "goodEnglish": {
       "type": "string",
-      "required" : true
+      "required": true
     },
     "writingEn": {
       "type": "number"
