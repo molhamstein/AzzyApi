@@ -112,7 +112,7 @@ module.exports = function (Forms) {
                 //console.log(t.id);
                 client.addRole(resClient.id, 5, function (err, res) {
                     if (err) throw err;
-                    Forms.updateAll({ id: form.id }, { clientId: resClient.id }, function (err, info) {
+                    Forms.updateAll({ id: form.id }, { clientId: resClient.id, token: t.id }, function (err, info) {
                         if (err) throw err;
 
                         var sub = "confirming the receipt";

@@ -40,6 +40,9 @@
       "type": "string",
       "default": " "
     },
+    "token": {
+      "type": "string"
+    },
     "nameFarsi": {
       "type": "string",
       "required": true
@@ -612,6 +615,13 @@
       "principalId": "appCanceler",
       "permission": "ALLOW",
       "property": "cancelAp"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "findById"
     }
   ],
   "methods": {}
