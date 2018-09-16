@@ -85,14 +85,6 @@ module.exports = function (Constime) {
         var id = ctx.args.data.consId;
         Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id }, function (err, res) {
             if (err) throw err;
-            Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consId: id },
-                { startDate: e }, function (err, res) {
-                    if (err) throw err;
-                    Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consId: id },
-                        { endDate: s }, function (err, res) {
-                            if (err) throw err;
-                        });
-                });
         });
         next();
     });
