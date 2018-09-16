@@ -187,6 +187,20 @@ module.exports = function (Constime) {
         http: { path: '/fetchApClientNo', verb: 'get' }
     });
 
-
+    Constime.deleteSlots = function(sDate, eDate, consId, cb){
+        Constime.destroyAll({ startDate: { gte: sDate }, endDate: { lte: eDate }, consId: consId }, function (err, res) {
+            if (err) return cb(err);
+            cb(null , res);
+        });
+    }
+    Constime.remoteMethod('deleteSlots', {
+        accepts: [
+            { arg: 'startDate', type: 'date' },
+            { arg: 'endDate', type: 'date' },
+            { arg: 'consId', type: 'string' }
+        ],
+        returns: { arg: 'deleteSlots', type: 'object' },
+        http: { path: '/deleteSlots', verb: 'delete' }
+    });
 
 };

@@ -172,6 +172,13 @@
       "principalId": "adminstrator",
       "permission": "ALLOW",
       "property": "deleteById"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "manager",
+      "permission": "ALLOW",
+      "property": "deleteSlots"
     }
   ],
   "methods": {}
