@@ -92,11 +92,6 @@ module.exports = function (Constime) {
         });
         next();
     });
-    function cc(elm) {
-        Constime.create(elm, function (err, ob) {
-            if (err) throw err;
-        });
-    }
 
     Constime.afterRemote('create', function (ctx, ctime, next) {
         Constime.destroyById(ctime.id, function (err, ob) {
