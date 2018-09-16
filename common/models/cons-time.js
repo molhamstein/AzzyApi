@@ -105,26 +105,28 @@ module.exports = function (Constime) {
     Constime.afterRemote('create', function (ctx, ctime, next) {
         Constime.destroyById(ctime.id, function (err, ob) {
             if (err) throw err;
-            var d = ctime.startDate;
-            var d1 = moment(d).add(30, 'm').toDate();
+            var d = moment(ctime.startDate).utcOffset(0);
+            
+            var d1 = moment(d).add(30, 'm');
             var arr = new Array();
-            while (d1 < ctime.endDate) {
-                if (d.getHours() == 23) {
-                    var tmp = moment(d);
+            while (d1 < moment(ctime.endDate).utcOffset(0)) {
+                if (d.hour() == 20) {
+                    var tmp = d;
                     tmp.add(1, 'd');
-                    tmp.hour(10);
+                    tmp.hour(7);
                     tmp.minute(0);
-                    d = tmp.toDate();
+                    d = tmp;
                 }
-                else if (d.getHours() < 10) {
-                    d.setHours(10);
-                    d.setMinutes(0);
+                else if (d.hour() < 7) {
+                    d.hour(7);
+                    d.minute(0);
                 }
-                d1 = moment(d).add(30, 'm').toDate();
-                if (d1 < ctime.endDate) {
+                d1 = moment(d).add(30, 'm');
+                
+                if (d1 < moment(ctime.endDate).utcOffset(0)) {
                     var elm = {
-                        startDate: d,
-                        endDate: d1,
+                        startDate: d.toDate(),
+                        endDate: d1.toDate(),
                         location: ctime.location,
                         open: ctime.open,
                         consId: ctime.consId,
