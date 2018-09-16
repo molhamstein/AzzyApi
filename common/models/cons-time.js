@@ -54,7 +54,7 @@ module.exports = function (Constime) {
         var s, e;
         s = new Date(ctx.args.data.startDate);
         e = new Date(ctx.args.data.endDate);
-
+       // console.log(e);
         if (s.getMinutes() < 15) {
             s.setMinutes(0);
         }
@@ -80,8 +80,12 @@ module.exports = function (Constime) {
         s.setMilliseconds(0);
         e.setSeconds(0);
         e.setMilliseconds(0);
+        //console.log(s);
+        //console.log(e);
+        
         ctx.args.data.startDate = s;
         ctx.args.data.endDate = e;
+        
         var id = ctx.args.data.consId;
         Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id }, function (err, res) {
             if (err) throw err;
@@ -98,7 +102,7 @@ module.exports = function (Constime) {
         Constime.destroyById(ctime.id, function (err, ob) {
             if (err) throw err;
             var d = moment(ctime.startDate).utcOffset(0);
-            
+            console.log(d);
             var d1 = moment(d).add(30, 'm');
             var arr = new Array();
             while (d1 < moment(ctime.endDate).utcOffset(0)) {
@@ -114,6 +118,7 @@ module.exports = function (Constime) {
                     d.minute(0);
                 }
                 d1 = moment(d).add(30, 'm');
+                console.log(d);
                 
                 if (d1 < moment(ctime.endDate).utcOffset(0)) {
                     var elm = {
