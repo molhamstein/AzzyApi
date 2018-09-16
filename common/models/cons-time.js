@@ -18,7 +18,7 @@ module.exports = function (Constime) {
                         order: 'startDate'
                     }
                 },
-                where: {type: "consultant" }
+                where: { type: "consultant" }
             }, cb);
         }
         else {
@@ -31,7 +31,7 @@ module.exports = function (Constime) {
                         order: 'startDate'
                     }
                 },
-                where: { id: { inq: ids } , type: "consultant" }
+                where: { id: { inq: ids }, type: "consultant" }
             }, cb);
         }
 
@@ -50,18 +50,6 @@ module.exports = function (Constime) {
         returns: { arg: 'readCalander', type: 'array' }
     });
 
-    function dst(s, e, id) {
-        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id });
-    }
-
-    function updt(s, e, id) {
-        Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consId: id },
-            { startDate: e });
-
-        Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consId: id },
-            { endDate: s });
-
-    }
     Constime.beforeRemote('create', function (ctx, ctime, next) {
         var s, e;
         s = new Date(ctx.args.data.startDate);
@@ -92,14 +80,22 @@ module.exports = function (Constime) {
         s.setMilliseconds(0);
         e.setSeconds(0);
         e.setMilliseconds(0);
-
         ctx.args.data.startDate = s;
         ctx.args.data.endDate = e;
         var id = ctx.args.data.consId;
-        dst(s, e, id);
-        updt(s, e, id);
+        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id }, function (err, res) {
+            if (err) throw err;
+            Constime.updateAll({ startDate: { gte: s }, endDate: { gt: e }, consId: id },
+                { startDate: e }, function (err, res) {
+                    if (err) throw err;
+                    Constime.updateAll({ startDate: { lt: s }, endDate: { lte: e }, consId: id },
+                        { endDate: s }, function (err, res) {
+                            if (err) throw err;
+                        });
+                });
+        });
         next();
-    })
+    });
     function cc(elm) {
         Constime.create(elm, function (err, ob) {
             if (err) throw err;
@@ -107,39 +103,45 @@ module.exports = function (Constime) {
     }
 
     Constime.afterRemote('create', function (ctx, ctime, next) {
-
-        var d = ctime.startDate;
-        var d1 = moment(d).add(30, 'm').toDate();
-
-        while (d1 < ctime.endDate) {
-
-            if (d.getHours() == 23) {
-                var tmp = moment(d);
-                tmp.add(1, 'd');
-                tmp.hour(10);
-                tmp.minute(0);
-                d = tmp.toDate();
-            }
-            else if (d.getHours() < 10) {
-                d.setHours(10);
-                d.setMinutes(0);
-            }
-            d1 = moment(d).add(30, 'm').toDate();
-            var elm = {
-                startDate: d,
-                endDate: d1,
-                location: ctime.location,
-                open: ctime.open,
-                consId: ctime.consId,
-                clientId: ctime.clientId
-
-            }
-            cc(elm);
-            d = d1;
-        }
         Constime.destroyById(ctime.id, function (err, ob) {
             if (err) throw err;
+            var d = ctime.startDate;
+            var d1 = moment(d).add(30, 'm').toDate();
+            var arr = new Array();
+            while (d1 < ctime.endDate) {
+                if (d.getHours() == 23) {
+                    var tmp = moment(d);
+                    tmp.add(1, 'd');
+                    tmp.hour(10);
+                    tmp.minute(0);
+                    d = tmp.toDate();
+                }
+                else if (d.getHours() < 10) {
+                    d.setHours(10);
+                    d.setMinutes(0);
+                }
+                d1 = moment(d).add(30, 'm').toDate();
+                if (d1 < ctime.endDate) {
+                    var elm = {
+                        startDate: d,
+                        endDate: d1,
+                        location: ctime.location,
+                        open: ctime.open,
+                        consId: ctime.consId,
+                        clientId: ctime.clientId
+
+                    }
+                    arr.push(elm);
+                    //cc(elm);
+                }
+                d = d1;
+            }
+            Constime.create(arr, function (err, res) {
+                if (err) throw err;
+            });
         });
+
+
         next();
 
     })
@@ -147,16 +149,16 @@ module.exports = function (Constime) {
     Constime.writeCalander = function () { };
     Constime.ocCalander = function () { };
 
-    Constime.fetchApAct = function(token , cb) {
+    Constime.fetchApAct = function (token, cb) {
         var act = app.models.AccessToken;
-        act.findById(token, function(err , res){
+        act.findById(token, function (err, res) {
             if (err) return cb(err);
             if (_.isEmpty(res)) return cb(new Error("token not found"));
 
-            Constime.find({where: {clientId: res[0].userId}}, function(err,res){
+            Constime.find({ where: { clientId: res[0].userId } }, function (err, res) {
                 if (err) return cb(err);
                 if (_.isEmpty(res)) return cb("the client does not have an appointment");
-                return cb (null, res);
+                return cb(null, res);
             })
         });
     }
@@ -170,15 +172,15 @@ module.exports = function (Constime) {
     });
 
 
-    Constime.fetchApClientNo = function(num , cb) {
+    Constime.fetchApClientNo = function (num, cb) {
         var client = app.models.client;
-        client.find({where: {clientNumber: num}},function(err,res){
+        client.find({ where: { clientNumber: num } }, function (err, res) {
             if (err) return cb(err);
             if (_.isEmpty(res)) return cb(new Error("client not found"));
-            Constime.find({where: {clientId: res[0].id}}, function(err,res){
+            Constime.find({ where: { clientId: res[0].id } }, function (err, res) {
                 if (err) return cb(err);
                 if (_.isEmpty(res)) return cb("the client does not have an appointment");
-                return cb (null, res);
+                return cb(null, res);
             });
         });
     }
