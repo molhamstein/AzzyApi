@@ -15,6 +15,10 @@
     },
     "secondarycolor": {
       "type": "string"
+    },
+    "status":{
+      "type": "string",
+      "default": "active"
     }
   },
   "validations": [],

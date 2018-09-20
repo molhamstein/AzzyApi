@@ -11,7 +11,11 @@ module.exports = function (Staffuser) {
         in: ['manager', 'consultant', 'adminstrator', 'secretary'],
         message: 'not valid type'
     });
-
+    Staffuser.validatesInclusionOf('status', {
+        in: ['active', 'deactive'],
+        message: 'not valid status',
+        allowBlank: true
+    });
 
     /**
    * Add a user to the given role.
