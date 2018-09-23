@@ -16,7 +16,7 @@
     "secondarycolor": {
       "type": "string"
     },
-    "status":{
+    "status": {
       "type": "string",
       "default": "active"
     }
@@ -26,6 +26,14 @@
     "slots": {
       "type": "hasMany",
       "model": "consTime",
+      "foreignKey": "consId",
+      "options": {
+        "nestRemoting": true
+      }
+    },
+    "forms": {
+      "type": "hasMany",
+      "model": "forms",
       "foreignKey": "consId",
       "options": {
         "nestRemoting": true
