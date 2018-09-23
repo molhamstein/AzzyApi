@@ -40,9 +40,6 @@
       "type": "string",
       "default": " "
     },
-    "token": {
-      "type": "string"
-    },
     "nameFarsi": {
       "type": "string",
       "required": true

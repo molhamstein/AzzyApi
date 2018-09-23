@@ -87,7 +87,7 @@ module.exports = function (Forms) {
             delete context.args.data.textBoxAdmin;
             delete context.args.data.textBoxNotes;
             delete context.args.data.appointmentId;
-            
+
         }
         next();
     });
@@ -112,7 +112,7 @@ module.exports = function (Forms) {
                 //console.log(t.id);
                 client.addRole(resClient.id, 5, function (err, res) {
                     if (err) throw err;
-                    Forms.updateAll({ id: form.id }, { clientId: resClient.id, token: t.id }, function (err, info) {
+                    Forms.updateAll({ id: form.id }, { clientId: resClient.id }, function (err, info) {
                         if (err) throw err;
 
                         var sub = "confirming the receipt";
@@ -186,6 +186,28 @@ module.exports = function (Forms) {
     Forms.remoteMethod('getContracts', {
         returns: { arg: 'contracts', type: 'array' },
         http: { path: '/getContracts', verb: 'get' }
+    });
+
+    Forms.changeStausToUnproc = function (formId, textbox, cb) {
+        Forms.updateAll({ id: formId }, {
+            status: "unprocessed", consId: null, dateOfProc: null, textBoxAdmin: textbox,
+            appointmentId: null
+        }, function (err, info){
+            if (err) return cb(err);
+            Forms.findById(formId, function (err , form){
+                if (err) return cb (err);
+                cb (null , form);
+            });
+        });
+
+    }
+    Forms.remoteMethod('changeStausToUnproc', {
+        accepts: [
+            { arg: 'formId', type: 'string' },
+            { arg: 'textbox', type: 'string' }
+        ],
+        returns: { arg: 'changeStausToUnproc', type: 'object' },
+        http: { path: '/changeStausToUnproc', verb: 'put' }
     });
 
     Forms.changeStatusToProc = function (formId, statusName, textbox, cb) {
@@ -427,7 +449,7 @@ module.exports = function (Forms) {
             if (!res) return cb(new Error("form not found"))
             var consFormId = res.consId;
             var cons = app.models.consTime;
-            cons.updateAll( {clientId: res.clientId}, {clientId: null, open: true}, function(err,info){
+            cons.updateAll({ clientId: res.clientId }, { clientId: null, open: true }, function (err, info) {
                 if (err) return cb(err);
                 cons.findById(apId, function (err, res) {
                     if (err) return cb(err)
@@ -451,12 +473,12 @@ module.exports = function (Forms) {
                         }, function (err, f) {
                             if (err) return cb(err);
                             var form = f.toJSON();
-    
+
                             var client = app.models.client;
                             var act = app.models.AccessToken;
                             act.find({ where: { userId: form.Client.id } }, function (err, res) {
                                 if (err) return cb(err);
-    
+
                                 var d = new Date();
                                 var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
                                 if (p < -2 * 3600 * 24) {
@@ -472,7 +494,7 @@ module.exports = function (Forms) {
                                     client.addRole(form.Client.id, 7, function (err, res) {
                                         if (err) return cb(err);
                                         var con = app.models.consTime;
-                                        con.updateAll({ id: apId }, { clientId: form.Client.id , open:false }, function (err, info) {
+                                        con.updateAll({ id: apId }, { clientId: form.Client.id, open: false }, function (err, info) {
                                             if (err) return cb(err);
                                             var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
                                             var email5 = {
@@ -494,7 +516,7 @@ module.exports = function (Forms) {
                                             };
                                             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
                                             var html_body = renderer(email5);
-    
+
                                             Forms.sendEmail(form.email, sub, html_body, function (err) {
                                                 if (err) return cb(err);
                                                 return cb(null, form);
@@ -507,7 +529,7 @@ module.exports = function (Forms) {
                     });
                 });
             });
-            
+
         });
 
     }
@@ -537,7 +559,7 @@ module.exports = function (Forms) {
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         if (err) return cb(err);
                         var cons = app.models.consTime;
-                        cons.updateAll({ clientId: f.clientId }, { clientId: null, open: true}, function (err, info) {
+                        cons.updateAll({ clientId: f.clientId }, { clientId: null, open: true }, function (err, info) {
                             if (err) return cb(err);
                             if (!_.isEmpty(res))
                                 client.logout(res[0].id);
