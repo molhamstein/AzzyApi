@@ -188,9 +188,9 @@ module.exports = function (Forms) {
         http: { path: '/getContracts', verb: 'get' }
     });
 
-    Forms.changeStausToUnproc = function (formId, textbox, cb) {
+    Forms.changeStausToUnproc = function (formId, textBoxAdmin, cb) {
         Forms.updateAll({ id: formId }, {
-            status: "unprocessed", consId: null, dateOfProc: null, textBoxAdmin: textbox,
+            status: "unprocessed", consId: null, dateOfProc: null, textBoxAdmin: textBoxAdmin,
             appointmentId: null
         }, function (err, info){
             if (err) return cb(err);
@@ -204,14 +204,14 @@ module.exports = function (Forms) {
     Forms.remoteMethod('changeStausToUnproc', {
         accepts: [
             { arg: 'formId', type: 'string' },
-            { arg: 'textbox', type: 'string' }
+            { arg: 'textBoxAdmin', type: 'string' }
         ],
         returns: { arg: 'changeStausToUnproc', type: 'object' },
         http: { path: '/changeStausToUnproc', verb: 'put' }
     });
 
-    Forms.changeStatusToProc = function (formId, statusName, textbox, cb) {
-        Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textbox }, function (err, res) {
+    Forms.changeStatusToProc = function (formId, statusName, textBoxAdmin, cb) {
+        Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textBoxAdmin }, function (err, res) {
             if (err) return cb(err);
             Forms.findById(formId, function (err, form) {
                 if (err) return cb(err);
@@ -285,14 +285,14 @@ module.exports = function (Forms) {
         accepts: [
             { arg: 'formId', type: 'string' },
             { arg: 'statusName', type: 'string' },
-            { arg: 'textbox', type: 'string' }
+            { arg: 'textBoxAdmin', type: 'string' }
         ],
         returns: { arg: 'changeStatusToProc', type: 'object' },
         http: { path: '/changeStatusToProc', verb: 'put' }
     });
 
-    Forms.changeStatusToConsultation = function (formId, textbox, consId, cb) {
-        Forms.updateAll({ id: formId }, { status: "consultation", dateOfProc: new Date(), textBoxAdmin: textbox, consId: consId }, function (err, res) {
+    Forms.changeStatusToConsultation = function (formId, textBoxAdmin, consId, cb) {
+        Forms.updateAll({ id: formId }, { status: "consultation", dateOfProc: new Date(), textBoxAdmin: textBoxAdmin, consId: consId }, function (err, res) {
             if (err) return cb(err);
             Forms.findById(formId, function (err, form) {
                 if (err) return cb(err);
@@ -343,7 +343,7 @@ module.exports = function (Forms) {
     Forms.remoteMethod('changeStatusToConsultation', {
         accepts: [
             { arg: 'formId', type: 'string' },
-            { arg: 'textbox', type: 'string' },
+            { arg: 'textBoxAdmin', type: 'string' },
             { arg: 'consId', type: 'string' }
         ],
         returns: { arg: 'changeStatusToConsultation', type: 'object' },
@@ -437,7 +437,8 @@ module.exports = function (Forms) {
 
     Forms.remoteMethod('changeStatusToContracts', {
         accepts: [
-            { arg: 'formId', type: 'any' }
+            { arg: 'formId', type: 'any' },
+            { arg: 'textBoxAdmin', type: 'string'}
         ],
         returns: { arg: 'changeStatusToContracts', type: 'object' },
         http: { path: '/changeStatusToContracts', verb: 'put' }
@@ -610,8 +611,8 @@ module.exports = function (Forms) {
         returns: { arg: 'cancelAp', type: 'object' },
         http: { path: '/cancelAp/:id', verb: 'put' }
     });
-    Forms.changeStatusToContracts = function (formId, cb) {
-        Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date() }, cb);
+    Forms.changeStatusToContracts = function (formId,textBoxAdmin, cb) {
+        Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date(), textBoxAdmin:textBoxAdmin }, cb);
     }
 
 
