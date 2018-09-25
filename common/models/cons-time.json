@@ -193,6 +193,13 @@
       "principalId": "consultant",
       "permission": "ALLOW",
       "property": "deleteSlots"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "reception",
+      "permission": "ALLOW",
+      "property": "readCalander"
     }
   ],
   "methods": {}

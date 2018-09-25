@@ -8,7 +8,7 @@ var ACL = app.models.ACL;
 module.exports = function (Staffuser) {
     Staffuser.userDef = function () { };
     Staffuser.validatesInclusionOf('type', {
-        in: ['manager', 'consultant', 'adminstrator', 'secretary'],
+        in: ['manager', 'consultant', 'adminstrator', 'secretary' , 'reception'],
         message: 'not valid type'
     });
     Staffuser.validatesInclusionOf('status', {
@@ -16,6 +16,48 @@ module.exports = function (Staffuser) {
         message: 'not valid status',
         allowBlank: true
     });
+
+    /*Staffuser.setPassword= function (userId , oldPassword , newPassword, cb){
+        Staffuser.findById(userId , function(err , res){
+            if (err) return cb(err);
+            if (!res)
+                return cb(new Error('user not found'));
+            if (res.password === Staffuser.hashPassword(oldPassword)){
+                Staffuser.updateAll({id:userId}, {password: newPassword}, function(err, info){
+                    if (err) return cb (err);
+                    cb(null,res);
+                });
+            }
+            else {
+                console.log(res.password)
+                console.log(Staffuser.hashPassword(oldPassword))
+                
+                return cb(new Error('oldPassword does not match'));
+            }
+        });
+        this.changePassword(userId , oldPassword, newPassword, function(err){
+            if (err) return cb (err);
+            cb (null, "done");
+        });
+    }
+    Staffuser.remoteMethod(
+        'setPassword',
+        {
+            accepts: [
+                { arg: 'id', type: 'string',required: true, http: { source: 'path' } },
+                { arg: 'oldPassword', type: 'string' },
+                { arg: 'newPassword', type: 'string' }
+                
+            ],
+            http: {
+                path: '/setPassword/:id',
+                verb: 'put'
+            },
+            returns: { type: 'object', root: true }
+        }
+    );
+    */
+   
 
     /**
    * Add a user to the given role.
@@ -97,19 +139,19 @@ module.exports = function (Staffuser) {
         var RoleMapping = app.models.RoleMapping;
 
         Staffuser.findOne({ where: { id: userId } }, function (err, user) { // Find the user...
-            if (err) cb(err);
+            if (err) return cb(err);
 
             if (!_.isEmpty(user)) {
                 Role.findOne({ where: { id: roleId } }, function (err, role) { // Find the role...
-                    if (err) cb(err);
+                    if (err)return cb(err);
 
                     if (!_.isEmpty(role)) {
                         RoleMapping.findOne({ where: { principalId: userId, roleId: roleId } }, function (err, roleMapping) { // Find the role mapping...
-                            if (err) cb(err);
+                            if (err)return cb(err);
 
                             if (!_.isEmpty(roleMapping)) {
                                 roleMapping.destroy(function (err) {
-                                    if (err) cb(err);
+                                    if (err)return cb(err);
 
                                     cb(null, role); // Success, return role object
                                 });
@@ -120,13 +162,13 @@ module.exports = function (Staffuser) {
                     } else {
                         error = new Error('Role.' + roleId + ' was not found.');
                         error.http_code = 404;
-                        cb(error);
+                        return cb(error);
                     }
                 });
             } else {
                 error = new Error('User.' + userId + ' was not found.');
                 error.http_code = 404;
-                cb(error);
+                return cb(error);
             }
         });
     };

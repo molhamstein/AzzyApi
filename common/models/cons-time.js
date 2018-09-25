@@ -10,16 +10,22 @@ module.exports = function (Constime) {
     Constime.readCalander = function (dateStart, dateEnd, ids, cb) {
         if (_.isEmpty(ids)) {
             var stf = app.models.staffuser;
-            stf.find({
+            stf.find([{
                 include: {
                     relation: 'slots',
                     scope: {
+                        include: {
+                            relation: 'forms',
+                            scope: {
+                                fields: {id: true, clientId: true, nameEnglish: true, surnameEnglish: true}
+                            }
+                        },
                         where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd } },
                         order: 'startDate'
                     }
                 },
                 where: { type: "consultant" }
-            }, cb);
+            }], cb);
         }
         else {
             var stf = app.models.staffuser;

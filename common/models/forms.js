@@ -211,7 +211,7 @@ module.exports = function (Forms) {
     });
 
     Forms.changeStatusToProc = function (formId, statusName, textBoxAdmin, cb) {
-        Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textBoxAdmin }, function (err, res) {
+        Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textBoxAdmin, consId: null }, function (err, res) {
             if (err) return cb(err);
             Forms.findById(formId, function (err, form) {
                 if (err) return cb(err);
@@ -612,7 +612,7 @@ module.exports = function (Forms) {
         http: { path: '/cancelAp/:id', verb: 'put' }
     });
     Forms.changeStatusToContracts = function (formId,textBoxAdmin, cb) {
-        Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date(), textBoxAdmin:textBoxAdmin }, cb);
+        Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date(), textBoxAdmin: textBoxAdmin }, cb);
     }
 
 
