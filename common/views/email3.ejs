@@ -1,9 +1,43 @@
-<h4><%=txt1 %> <%=clientName %> <%=clientSurname %> </h4>
-<p><%=txt2 %></p>
-<p><%=txt3 %></p>
-<p><%=textbox %></p>
-<p><%=txt4 %></p>
-<p><%=formLink %></p>
-<h4><%=txt5 %></h4>
-<h4><%=txt6 %></h4>
+<div dir="ltr">
+    <h4>Subject: Further Information Request, Client Number
+        <%=clientNumber %>
+    </h4>
+    <h4>Dear
+        <%=clientName %>
+    </h4>
+    <p>Thank you for sending your information through our application form.</p>
+    <p>However we need further Information from you as below:</p>
+    <p>
+        <%=textbox %>
+    </p>
+    <p>Please click on this link to re-open your form and complete your form accordingly:</p>
+    <p>
+        <%=formLink %>
+    </p>
+    <h4>
+        Best regards
+    </h4>
+    <h4>
+        Azzy Immigration
+    </h4>
+</div>
 
+<div dir="rtl">
+    <h4>موضوع: نتیجه بررسی اولیه مشخصات مشتری: شرایموضوع: نتیجه بررسی اولیه مشخصات مشتری: نیاز به اطلاعات بیشتر</h4>
+    <h4>مشتری گرامی
+        <%=clientNameFarsi %> ، شماره مشتری
+        <%=clientNumber %>
+    </h4>
+    <p>ضمن تشکر از حسن اعتماد تان نسبت به مجموعه ما، بدینوسیله خواهشمندیم فرم مشاوره خود را با ارایه اطلاعات بیشتر در
+        موارد ذیل تکمیل نمایید:</p>
+    <p>
+        <%=textbox %>
+    </p>
+    <p>جهت دسترسی به فرم مذکور، لطفا از لینک ذیل استفاده نمایید.</p>
+    <p>
+        <%=formLink %>
+    </p>
+    <h4>
+        ارادتمند شما، تیم آزی ایمیگریشن
+    </h4>
+</div>

@@ -5,7 +5,7 @@
   "remoting": {
     "context": false,
     "rest": {
-      "handleErrors": false,
+      "handleErrors": true,
       "normalizeHttpPath": false,
       "xml": false
     },
@@ -19,5 +19,5 @@
     },
     "cors": false
   },
-  "baseURL": "http://www.azzyimmi.com.au/"
+  "baseURL": "http://104.217.253.15/azzyPortal/dist/"
 }

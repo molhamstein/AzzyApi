@@ -1,15 +1,72 @@
-<h4><%=txt1 %> <%=clientName %> <%=clientSurname %> </h4>
-<p><%=txt2 %></p>
-<p><%=txt3 %></p>
-<p><%=txt4 %></p>
-<p><%=txt5 %></p>
-<p><%=txt6 %></p>
-<p><%=txt7 %></p>
-<p><%=txt8 %></p>
-<p><%=calandarLink %></p>
-<p><%=txt9 %></p>
-<p><%=txt10 %></p>
-<p><%=cancelLink %></p>
-<h4><%=txt11 %></h4>
-<h4><%=txt12 %></h4>
+<div dir="ltr">
+    <h4>
+        <%= subject %>
+    </h4>
+    <h4>Dear
+        <%=clientName %>
+    </h4>
+    <p>This is a Reminder for your Consultation with us:</p>
+    <p>Location:
+        <%= location %>
+    </p>
+    <p>Your Contact Partner:
+        <%= consName %>
+    </p>
+    <p>Date:
+        <%=date %>
+    </p>
+    <p>Time:
+        <%=time %>
+    </p>
+    <p>Please be aware that this appointment cannot be rescheduled anymore.</p>
 
+    <p>If you might not be able to attend, please, cancel your appointment by clicking on below link:</p>
+    <p>
+        <%=cancelLink %>
+    </p>
+    <p>Consultation Fee:
+        <%=fee %>
+    </p>
+    <p>No show without cancellation is subject to cancellation fee</p>
+    <h4>
+        Best regards
+    </h4>
+    <h4>
+        Azzy Immigration
+    </h4>
+</div>
+
+<div dir="rtl">
+    <h4>یادآوری وقت مشاوره برای شماره مشتری
+        <%= clientNumber %>
+    </h4>
+    <h4>مشتری گرامی
+        <%=clientNameFarsi %>
+    </h4>
+    <p>ضمن تشکر از حسن اعتماد تان نسبت به مجموعه ما، بدینوسیله به استحضار شما میرساند که قرار جلسه مشاوره جنابعالی به
+        شرح ذیل میباشد:</p>
+    <p>محل:
+        <%=location %>
+    </p>
+    <p>هزینه مشاوره:
+        <%= fee %>
+    </p>
+    <p>مخاطب شما در مجموعه آزی ایمیگریشن:
+        <%= consName %>
+    </p>
+    <p>تاريخ:
+        <%=date %>
+    </p>
+    <p>ساعت:
+        <%=time %>
+    </p>
+    <p>وقت فوق دیگر قابل تغییر نمیباشد. در صورتی که قادر به شرکت در جلسه فوق الذکر نباشید، لطفا نسبت به کنسل نمودن آن
+        از طریق لینک زیر اقدام نمایید.</p>
+    <p>
+        <%=cancelLink %>
+    </p>
+    <p>عدم حضور شما در موعد مقرر شامل هزینه کنسلی خواهد بود.</p>
+    <h4>
+        ارادتمند شما، تیم آزی ایمیگریشن
+    </h4>
+</div>

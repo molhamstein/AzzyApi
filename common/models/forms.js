@@ -117,16 +117,10 @@ module.exports = function (Forms) {
 
                         var sub = "confirming the receipt";
                         var email1 = {
-                            txt1: "Dear Client ",
-                            clientName: form.nameEnglish,
-                            txt2: "     Client Number: ",
+                            clientName: form.nameEnglish + " " + form.surnameEnglish,
+                            clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
                             clientNumber: resClient.clientNumber,
-                            txt3: "Thank you for sending your information through our application form.",
-                            txt4: "Our team is carefully processing all applications and will get back to you as soon as possible, which might take up to 14 working days. Within this time for any change or update of your submitted information, you can access your form by this link:",
-                            formLink: config.baseURL + '/forms/' + form.id + '?token=' + t.id,
-                            txt5: "We thank you in advance for being patient.",
-                            txt6: "Best regards",
-                            txt7: "Azzy Immigration"
+                            formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
                         var html_body = renderer(email1);
@@ -192,11 +186,11 @@ module.exports = function (Forms) {
         Forms.updateAll({ id: formId }, {
             status: "unprocessed", consId: null, dateOfProc: null, textBoxAdmin: textBoxAdmin,
             appointmentId: null
-        }, function (err, info){
+        }, function (err, info) {
             if (err) return cb(err);
-            Forms.findById(formId, function (err , form){
-                if (err) return cb (err);
-                cb (null , form);
+            Forms.findById(formId, function (err, form) {
+                if (err) return cb(err);
+                cb(null, form);
             });
         });
 
@@ -211,72 +205,73 @@ module.exports = function (Forms) {
     });
 
     Forms.changeStatusToProc = function (formId, statusName, textBoxAdmin, cb) {
+        var error;
+        if (!(statusName === "more info" || statusName === "not eligible")) {
+            error = new Error('not valid status');
+            error.status = 404;
+            error.code = "notValidStatus";
+            return cb(error);
+        }
         Forms.updateAll({ id: formId }, { status: statusName, dateOfProc: new Date(), textBoxAdmin: textBoxAdmin, consId: null }, function (err, res) {
             if (err) return cb(err);
-            Forms.findById(formId, function (err, form) {
+            Forms.findById(formId, { include: { relation: "Client" } }, function (err, form) {
                 if (err) return cb(err);
-
-                var client = app.models.client;
-                client.findById(form.clientId, function (err, resClient) {
+                form = form.toJSON();
+                var act = app.models.AccessToken;
+                act.find({ where: { userId: form.Client.id } }, function (err, res) {
+                    console.log(res);
+                    var client = app.models.client;
                     if (err) return cb(err);
-                    var act = app.models.AccessToken;
-                    act.find({ where: { userId: resClient.id } }, function (err, res) {
-                        var client = app.models.client;
-                        if (err) return cb(err);
-                        if (form.status == "not eligible") {
-                            if (!_.isEmpty(res))
-                                client.logout(res[0].id);
-                            client.removeRole(resClient.id, 5, function (err, res) {
+                    if (form.status == "not eligible") {
+                        if (!_.isEmpty(res)) {
+                            for (var i in res)
+                                client.logout(res[i].id);
+                        }
+                        client.removeRole(form.Client.id, 5, function (err, res) {
+                            if (err) return cb(err);
+                            var sub = "Request Declined, Client Number" + form.Client.clientNumber;
+                            var email2 = {
+                                clientNumber: form.Client.clientNumber,
+                                clientName: form.nameEnglish + " " + form.surnameEnglish,
+                                clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                                textbox: form.textBoxAdmin,
+                            };
+                            var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email2.ejs'));
+                            var html_body = renderer(email2);
+
+                            Forms.sendEmail(form.email, sub, html_body, function (err) {
                                 if (err) return cb(err);
-                                var sub = "Request Declined, " + form.nameEnglish + ", " + resClient.clientNumber;
-                                var email2 = {
-                                    txt1: "Dear ",
-                                    clientName: form.nameEnglish,
-                                    clientSurname: form.surnameEnglish,
-                                    txt2: "Thank you for sending your information through our application form.",
-                                    txt3: "Regretfully we have to inform you that you are not eligible to apply for immigration to Australia:",
-                                    textbox: form.textBoxAdmin,
-                                    txt4: "Best regards",
-                                    txt5: "Azzy Immigration"
-                                };
-                                var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email2.ejs'));
-                                var html_body = renderer(email2);
-                                Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                    if (err) return cb(err);
-                                    return cb(null, form);
-                                });
+                                return cb(null, form);
                             });
+                        });
 
+                    }
+                    else if (form.status == "more info") {
+                        if (!_.isEmpty(res)) {
+                            for (var i in res)
+                                client.logout(res[i].id);
                         }
-                        else if (form.status == "more info") {
-                            if (!_.isEmpty(res))
-                                client.logout(res[0].id);
-                            client.login({ email: resClient.email, password: '0000', ttl: 1209600 }, function (err, t) {
-                                if (err) throw err;
-                                var sub = "Further Information Request, " + form.nameEnglish + ", " + resClient.clientNumber;
-                                var email3 = {
-                                    txt1: "Dear ",
-                                    clientName: form.nameEnglish,
-                                    clientSurname: form.surnameEnglish,
-                                    txt2: "Thank you for sending your information through our application form.",
-                                    txt3: "However we need further Information from you as below:",
-                                    textbox: form.textBoxAdmin,
-                                    txt4: "Please click on this link to re-open your form and complete your form accordingly:",
-                                    formLink: config.baseURL + '/forms/' + form.id + '?token=' + t.id,
-                                    txt5: "Best regards",
-                                    txt6: "Azzy Immigration"
-                                };
-                                var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email3.ejs'));
-                                var html_body = renderer(email3);
+                        client.login({ email: form.email, password: '0000', ttl: 1209600 }, function (err, t) {
+                            if (err) throw err;
+                            var sub = "Further Information Request, " + form.nameEnglish + ", " + form.Client.clientNumber;
+                            var email3 = {
+                                clientNumber: form.Client.clientNumber,
+                                clientName: form.nameEnglish + " " + form.surnameEnglish,
+                                clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                                textbox: form.textBoxAdmin,
+                                formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id,
+                            };
+                            var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email3.ejs'));
+                            var html_body = renderer(email3);
 
-                                Forms.sendEmail(form.email, sub, html_body, function (err) {
-                                    if (err) return cb(err);
-                                    return cb(null, form);
-                                });
+                            Forms.sendEmail(form.email, sub, html_body, function (err) {
+                                if (err) return cb(err);
+                                return cb(null, form);
                             });
-                        }
-                    });
+                        });
+                    }
                 });
+
             });
         });
     }
@@ -311,18 +306,15 @@ module.exports = function (Forms) {
                                 if (err) return cb(err);
                                 client.addRole(resClient.id, 6, function (err, res) {
                                     if (err) return cb(err);
-                                    var sub = "Your Appointment Request, " + form.nameEnglish + ", " + resClient.clientNumber;
+                                    var sub = "Your Appointment Request, Client Number" + resClient.clientNumber;
                                     var email4 = {
-                                        txt1: "Dear ",
-                                        clientName: form.nameEnglish,
-                                        clientSurname: form.surnameEnglish,
-                                        txt2: "Thank you for sending your information through our application form.",
-                                        txt3: "In order to discuss further steps and possibilities for your immigration, please select one available appointment which is suitable for you in our appointment calendar by using below link:",
-                                        calandarLink: config.baseURL + '/calandar/' + form.consId + '?token=' + t.id,
-                                        txt4: "You will receive an email for appointment confirmation and another email 2 days prior to your appointment as a reminder. You can still change this appointment if necessary, but not later than 2 days prior to the appointment.",
+                                        subject: sub,
+                                        clientNumber: resClient.clientNumber,
+                                        clientName: form.nameEnglish + " " + form.surnameEnglish,
+                                        clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                                        calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
                                         textbox: form.textBoxAdmin,
-                                        txt5: "Best regards",
-                                        txt6: "Azzy Immigration"
+                                        fee: form.professionalInstallments,
                                     };
                                     var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email4.ejs'));
                                     var html_body = renderer(email4);
@@ -375,24 +367,19 @@ module.exports = function (Forms) {
                     var act = app.models.AccessToken;
                     act.findOne({ where: { userId: f.Client.id } }, function (err, t) {
                         if (err) throw err;
-                        var sub = "Your Appointment Reminder, " + f.nameEnglish + ", " + f.Client.clientNumber;
+                        var sub = "Your Appointment Reminder, Client Number" + f.Client.clientNumber;
                         var email6 = {
-                            txt1: "Dear ",
-                            clientName: f.nameEnglish,
-                            clientSurname: f.surnameEnglish,
-                            txt2: "This is a Reminder for your Consultation with us:",
-                            txt3: "Location: " + f.consTimes.location,
-                            txt4: "Your Contact Partner: " + f.consTimes.consultant.username,
-                            txt5: "Date: " + f.consTimes.startDate.toDateString(),
-                            txt6: "Time: " + f.consTimes.startDate.toTimeString() + " till " + f.consTimes.endDate.toTimeString(),
-                            txt7: "If you might not be able to attend, please, re-schedule or cancel your appointment within the next 24 hours.",
-                            txt8: "You can change your appointment by clicking on below link:",
-                            calandarLink: config.baseURL + '/calandar/' + form.consId + '?token=' + t.id,
-                            txt9: "You will receive an email 2 days prior to your appointment as a reminder.",
-                            txt10: "You can cancel your Appointment by clicking on below link:",
-                            cancelLink: 'http://' + config.host + ':' + config.port + '/appointment/' + f.consTimes.id,
-                            txt11: "Best regards",
-                            txt12: "Azzy Immigration"
+                            subject: sub,
+                            clientNumber: f.Client.clientNumber,
+                            clientName: f.nameEnglish + " " + form.surnameEnglish,
+                            clientNameFarsi: f.nameFarsi + " " + form.surnameFarsi,
+                            calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
+                            location: f.consTimes.location,
+                            consName: f.consTimes.consultant.username,
+                            fee: f.professionalInstallments,
+                            date: f.consTimes.startDate.toDateString(),
+                            time: f.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
+                            cancelLink: config.baseURL + '/cancelappointment/' + f.id + '?token=' + t.id
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email6.ejs'));
                         var html_body = renderer(email6);
@@ -438,26 +425,34 @@ module.exports = function (Forms) {
     Forms.remoteMethod('changeStatusToContracts', {
         accepts: [
             { arg: 'formId', type: 'any' },
-            { arg: 'textBoxAdmin', type: 'string'}
+            { arg: 'textBoxAdmin', type: 'string' }
         ],
         returns: { arg: 'changeStatusToContracts', type: 'object' },
         http: { path: '/changeStatusToContracts', verb: 'put' }
     });
 
     Forms.selectAp = function (formId, apId, cb) {
+        var error;
         Forms.findById(formId, function (err, res) {
             if (err) return cb(err);
-            if (!res) return cb(new Error("form not found"))
+            if (!res) {
+                error = new Error("form not found");
+                error.status = 404;
+                error.code = "formNotFound";
+                return cb(error);
+            }
             var consFormId = res.consId;
             var cons = app.models.consTime;
-            cons.updateAll({ clientId: res.clientId }, { clientId: null, open: true }, function (err, info) {
-                if (err) return cb(err);
-                cons.findById(apId, function (err, res) {
-                    if (err) return cb(err)
-                    if (!res) return cb(new Error("appointment not found"))
-                    var consApId = res.consId;
-                    if (consApId != consFormId)
-                        return cb(new Error("appointment not found"));
+            cons.findById(apId, { where: { consId: consFormId } }, function (err, res) {
+                if (err) return cb(err)
+                if (!res) {
+                    error = new Error("slot not found");
+                    error.status = 404;
+                    error.code = "slotNotFound";
+                    return cb(error);
+                }
+                cons.updateAll({ clientId: res.clientId }, { clientId: null, open: true }, function (err, info) {
+                    if (err) return cb(err);
                     Forms.updateAll({ id: formId }, { appointmentId: apId }, function (err, info) {
                         if (err) return cb(err);
                         Forms.findOne({
@@ -483,7 +478,10 @@ module.exports = function (Forms) {
                                 var d = new Date();
                                 var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
                                 if (p < -2 * 3600 * 24) {
-                                    return cb(new Error("appointment is expired"))
+                                    error = new Error("appointment is expired");
+                                    error.status = 404;
+                                    error.code = "expiredAppointment";
+                                    return cb(error);
                                 }
                                 else if (p < 0) {
                                     p = 0;
@@ -497,23 +495,19 @@ module.exports = function (Forms) {
                                         var con = app.models.consTime;
                                         con.updateAll({ id: apId }, { clientId: form.Client.id, open: false }, function (err, info) {
                                             if (err) return cb(err);
-                                            var sub = "Your Appointment Confirmation, " + form.nameEnglish + ", " + form.Client.clientNumber;
+                                            var sub = "Your Appointment Confirmation, Client Number " + form.Client.clientNumber;
                                             var email5 = {
-                                                txt1: "Dear ",
-                                                clientName: form.nameEnglish,
-                                                clientSurname: form.surnameEnglish,
-                                                txt2: "Thank you scheduling a Consultation with us:",
-                                                txt3: "Location: " + form.consTimes.location,
-                                                txt4: "Your Contact Partner: " + form.consTimes.consultant.username,
-                                                txt5: "Date: " + form.consTimes.startDate.toDateString(),
-                                                txt6: "Time: " + form.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
-                                                txt7: "You can change your appointment by clicking on below link:",
-                                                calandarLink: config.baseURL + '/calandar/' + form.consId + '?token=' + t.id,
-                                                txt8: "You will receive an email prior to your appointment as a reminder",
-                                                txt9: "You can cancel your Appointment by clicking on below link:",
-                                                cancelLink: config.baseURL + '/cancelappointment/' + form.id + '?token=' + t.id,
-                                                txt10: "Best regards",
-                                                txt11: "Azzy Immigration"
+                                                subject: sub,
+                                                clientNumber: form.Client.clientNumber,
+                                                clientName: form.nameEnglish + " " + form.surnameEnglish,
+                                                clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                                                calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
+                                                location: form.consTimes.location,
+                                                consName: form.consTimes.consultant.username,
+                                                fee: form.professionalInstallments,
+                                                date: form.consTimes.startDate.toDateString(),
+                                                time: form.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
+                                                cancelLink: config.baseURL + '/cancelappointment/' + form.id + '?token=' + t.id
                                             };
                                             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
                                             var html_body = renderer(email5);
@@ -548,7 +542,7 @@ module.exports = function (Forms) {
 
 
     Forms.cancelAp = function (formId, cb) {
-        Forms.updateAll({ id: formId }, { appointmentId: " " }, function (err, info) {
+        Forms.updateAll({ id: formId }, { appointmentId: null }, function (err, info) {
             if (err) return cb(err);
 
             Forms.findById(formId, function (err, f) {
@@ -573,11 +567,11 @@ module.exports = function (Forms) {
                                     var sub = "Your Appointment cancel, " + f.nameEnglish + ", " + resClient.clientNumber;
 
                                     var email7 = {
-                                        txt1: "Dear " + f.nameEnglish + ", your appointment has been cancelled.",
-                                        txt2: "You can re-schedule an Appointment by clicking on below Link:",
-                                        calandarLink: config.baseURL + '/calandar/' + f.consId + '?token=' + t.id,
-                                        txt3: "Best regards",
-                                        txt4: "Azzy Immigration"
+                                        subject: sub,
+                                        clientNumber: resClient.clientNumber,
+                                        clientName: f.nameEnglish + " " + f.surnameEnglish,
+                                        clientNameFarsi: f.nameFarsi + " " + f.surnameFarsi,
+                                        calandarLink: config.baseURL + '/calandar/' + f.clientId + '/' + t.id,
                                     };
                                     var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
                                     var html_body = renderer(email7);
@@ -611,7 +605,7 @@ module.exports = function (Forms) {
         returns: { arg: 'cancelAp', type: 'object' },
         http: { path: '/cancelAp/:id', verb: 'put' }
     });
-    Forms.changeStatusToContracts = function (formId,textBoxAdmin, cb) {
+    Forms.changeStatusToContracts = function (formId, textBoxAdmin, cb) {
         Forms.updateAll({ id: formId }, { status: "contracts", dateOfProc: new Date(), textBoxAdmin: textBoxAdmin }, cb);
     }
 

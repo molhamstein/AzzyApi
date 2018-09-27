@@ -99,13 +99,13 @@ module.exports = function (Staffuser) {
 
                     } else {
                         error = new Error('Role.' + roleId + ' was not found.');
-                        error.http_code = 404;
+                        error.status = 404;
                         return cb(error); // Error
                     }
                 });
             } else {
                 error = new Error('User.' + userId + ' was not found.');
-                error.http_code = 404;
+                error.status = 404;
                 return cb(error); // Error
             }
         });
@@ -161,13 +161,13 @@ module.exports = function (Staffuser) {
                         });
                     } else {
                         error = new Error('Role.' + roleId + ' was not found.');
-                        error.http_code = 404;
+                        error.status = 404;
                         return cb(error);
                     }
                 });
             } else {
                 error = new Error('User.' + userId + ' was not found.');
-                error.http_code = 404;
+                error.status = 404;
                 return cb(error);
             }
         });

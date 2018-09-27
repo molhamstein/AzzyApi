@@ -1,7 +1,30 @@
-<h4><%=txt1 %> <%=clientName %> <%= txt2 %> <%=clientNumber %> </h4>
-<p><%=txt3 %></p>
-<p><%=txt4 %></p>
-<p><%=formLink %></p>
-<p><%=txt5 %></p>
-<h4><%=txt6 %></h4>
-<h4><%=txt7 %></h4>
+<div dir="ltr">
+    <h4>Dear Client
+        <%=clientName %> ,Client Number:
+        <%=clientNumber %>
+    </h4>
+    <h4>Subject: Confirmation of submitted Information</h4>
+    <p>Thank you for sending your information through our application form.</p>
+    <p>Our team is carefully processing all applications and will get back to you as soon as possible, which might take
+        up to 14 working days. Within this time for any change or update of your submitted information, you can access
+        your form by this link:</p>
+    <p>
+        <%=formLink %>
+    </p>
+    <p>We thank you in advance for being patient.</p>
+    <h4>Best regards</h4>
+    <h4>Azzy Immigration</h4>
+</div>
+
+<div dir="rtl">
+    <h4>موضوع: رسید دریافت مشخصات مشتری شماره <%=clientNumber %></h4>
+    <h4>مشتری گرامی <%=clientNameFarsi %></h4>
+    <p>با کمال تشکراز ارسال مشخصات تان از طریق فرم درخواست مشاوره آنلاین آزی ایمیگریشن، به اطلاع شما میرساند، تیم اجرایی آزی
+        ایمیگریشن در نهایت دقت نسبت به بررسی مشخصات شما اقدام نموده و در اسرع وقت شما را در جریان نتیجه این بررسی قرار خواهد
+        داد که ممکن است تا  14روز کاری به طول انجامد. در طی این مدت انتظار، شما میتوانید از طریق لینک زیر به فرم خود دسترسی
+        داشته و اطلاعات آن را به روز نمایید</p>
+    <p>
+        <%=formLink %>
+    </p>
+    <h4>ارادتمند شما، تیم آزی ایمیگریشن</h4>
+</div>

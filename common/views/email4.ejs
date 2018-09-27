@@ -1,9 +1,52 @@
-<h4><%=txt1 %> <%=clientName %> <%=clientSurname %> </h4>
-<p><%=txt2 %></p>
-<p><%=txt3 %></p>
-<p><%=calandarLink %></p>
-<p><%=txt4 %></p>
-<p><%=textbox %></p>
-<h4><%=txt5 %></h4>
-<h4><%=txt6 %></h4>
+<div dir="ltr">
+    <h4>
+        <%= subject %>
+    </h4>
+    <h4>Dear
+        <%=clientName %>
+    </h4>
+    <p>Thank you for sending your information through our application form.</p>
+    <p>In order to discuss further steps and possibilities for your immigration, please select one available
+        appointment which is suitable for you in our appointment calendar by using below link:</p>
+    <p>
+        <%=calandarLink %>
+    </p>
+    <p>You will receive an email for appointment .</p>
+    <p>
+        <%=textbox %>
+    </p>
+    <p>Consultation Fee:
+        <%=fee %>
+    </p>
+    <h4>
+        Best regards
+    </h4>
+    <h4>
+        Azzy Immigration
+    </h4>
+</div>
 
+<div dir="rtl">
+    <h4>موضوع: نتیجه بررسی اولیه مشخصات مشتری: شرایط مناسب</h4>
+    <h4>مشتری گرامی
+        <%=clientNameFarsi %> ، شماره مشتری
+        <%=clientNumber %>
+    </h4>
+    <p>ضمن تشکر از حسن اعتماد تان نسبت به مجموعه ما، بدینوسیله به استحضار شما میرساند که شرایط کلی و اولیه مهاجرت به
+        استرالیا را دارا هستید.</p>
+    <p>جهت بررسی عمیقتر شرایط شما لازم است جلسه مشاوره تشکیل داده شود. لذا خواهشمندیم جهت تعیین وقت مشاوره از طریق لینک
+        ذیل مناسبترین وقت را انتخاب نمایید:</p>
+    <p>
+        <%=calandarLink %>
+    </p>
+    <p>پس از انتخاب وقت مورد نظر، یک ایمیل تایید دریافت خواهید نمود.</p>
+    <p>
+        <%=textbox %>
+    </p>
+    <p> هزینه مشاوره:
+        <%=fee %>
+    </p>
+    <h4>
+        ارادتمند شما، تیم آزی ایمیگریشن
+    </h4>
+</div>

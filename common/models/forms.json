@@ -359,6 +359,96 @@
     },
     "australiaVisaTypeSp": {
       "type": "string"
+    },
+    "howKnow": {
+      "type": "string"
+    },
+    "mainApplicant": {
+      "type": "string"
+    },
+    "mainApplicantSp": {
+      "type": "string"
+    },
+    "dependant": {
+      "type": "string"
+    },
+    "dependantSp": {
+      "type": "string"
+    },
+    "occupationToBeAssessed": {
+      "type": "string"
+    },
+    "occupationToBeAssessedSp": {
+      "type": "string"
+    },
+    "yearsOfWorkExperience": {
+      "type": "number"
+    },
+    "yearsOfWorkExperienceSp": {
+      "type": "number"
+    },
+    "assessmentOrganization": {
+      "type": "string"
+    },
+    "assessmentOrganizationSp": {
+      "type": "string"
+    },
+    "professionalInstallments": {
+      "type": "number"
+    },
+    "professionalInstallmentsSp": {
+      "type": "number"
+    },
+    "professionalTotal": {
+      "type": "number"
+    },
+    "pointsFromEducation": {
+      "type": "number"
+    },
+    "pointsFromEducationSp": {
+      "type": "number"
+    },
+    "pointsFromWorkExperience": {
+      "type": "number"
+    },
+    "pointsFromWorkExperienceSp": {
+      "type": "number"
+    },
+    "pointsFromSpouse": {
+      "type": "number"
+    },
+    "pointsFromSpouseSp": {
+      "type": "number"
+    },
+    "pointsFromEnglishTest": {
+      "type": "number"
+    },
+    "pointsFromEnglishTestSp": {
+      "type": "number"
+    },
+    "pointsFromNAATITest": {
+      "type": "number"
+    },
+    "pointsFromNAATITestSp": {
+      "type": "number"
+    },
+    "pointsFromStateSponsorship": {
+      "type": "number"
+    },
+    "pointsFromStateSponsorshipSp": {
+      "type": "number"
+    },
+    "pointsFromFamilySponsorship": {
+      "type": "number"
+    },
+    "pointsFromFamilySponsorshipSp": {
+      "type": "number"
+    },
+    "totalPoints": {
+      "type": "number"
+    },
+    "totalPointsSp": {
+      "type": "number"
     }
   },
   "validations": [],
