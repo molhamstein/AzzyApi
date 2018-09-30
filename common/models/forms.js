@@ -312,7 +312,7 @@ module.exports = function (Forms) {
                                         clientNumber: resClient.clientNumber,
                                         clientName: form.nameEnglish + " " + form.surnameEnglish,
                                         clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                                        calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
+                                        calandarLink: config.baseURL + '/client-calendar/' + form.clientId + '/' + t.id,
                                         textbox: form.textBoxAdmin,
                                         fee: form.professionalInstallments,
                                     };
@@ -373,13 +373,13 @@ module.exports = function (Forms) {
                             clientNumber: f.Client.clientNumber,
                             clientName: f.nameEnglish + " " + form.surnameEnglish,
                             clientNameFarsi: f.nameFarsi + " " + form.surnameFarsi,
-                            calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
+                            calandarLink: config.baseURL + '/client-calendar/' + form.clientId + '/' + t.id,
                             location: f.consTimes.location,
                             consName: f.consTimes.consultant.username,
                             fee: f.professionalInstallments,
                             date: f.consTimes.startDate.toDateString(),
                             time: f.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
-                            cancelLink: config.baseURL + '/cancelappointment/' + f.id + '?token=' + t.id
+                            cancelLink: config.baseURL + '/cancel-appointment/' + f.id + '/' + t.id
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email6.ejs'));
                         var html_body = renderer(email6);
@@ -512,13 +512,13 @@ module.exports = function (Forms) {
                                                     clientNumber: form.Client.clientNumber,
                                                     clientName: form.nameEnglish + " " + form.surnameEnglish,
                                                     clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                                                    calandarLink: config.baseURL + '/calandar/' + form.clientId + '/' + t.id,
+                                                    calandarLink: config.baseURL + '/client-calendar/' + form.clientId + '/' + t.id,
                                                     location: form.consTimes.location,
                                                     consName: form.consTimes.consultant.username,
                                                     fee: form.professionalInstallments,
                                                     date: form.consTimes.startDate.toDateString(),
                                                     time: form.consTimes.startDate.toTimeString() + " till " + form.consTimes.endDate.toTimeString(),
-                                                    cancelLink: config.baseURL + '/cancelappointment/' + form.id + '?token=' + t.id
+                                                    cancelLink: config.baseURL + '/cancel-appointment/' + form.id + '/' + t.id
                                                 };
                                                 var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
                                                 var html_body = renderer(email5);
@@ -584,7 +584,7 @@ module.exports = function (Forms) {
                                         clientNumber: resClient.clientNumber,
                                         clientName: f.nameEnglish + " " + f.surnameEnglish,
                                         clientNameFarsi: f.nameFarsi + " " + f.surnameFarsi,
-                                        calandarLink: config.baseURL + '/calandar/' + f.clientId + '/' + t.id,
+                                        calandarLink: config.baseURL + '/client-calendar/' + f.clientId + '/' + t.id,
                                     };
                                     var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
                                     var html_body = renderer(email7);
