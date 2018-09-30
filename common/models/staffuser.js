@@ -8,7 +8,7 @@ var ACL = app.models.ACL;
 module.exports = function (Staffuser) {
     Staffuser.userDef = function () { };
     Staffuser.validatesInclusionOf('type', {
-        in: ['manager', 'consultant', 'adminstrator', 'secretary' , 'reception'],
+        in: ['manager', 'consultant', 'adminstrator', 'secretary', 'reception'],
         message: 'not valid type'
     });
     Staffuser.validatesInclusionOf('status', {
@@ -57,7 +57,7 @@ module.exports = function (Staffuser) {
         }
     );
     */
-   
+
 
     /**
    * Add a user to the given role.
@@ -82,18 +82,22 @@ module.exports = function (Staffuser) {
                             if (err) return cb(err);
 
                             if (_.isEmpty(roleMapping)) { // Only create if one doesn't exist to avoid duplicates
-                                role.principals.create({
-                                    principalType: RoleMapping.USER,
-                                    principalId: user.id
-                                }, function (err, principal) {
+                                RoleMapping.destroyAll({ principalId: userId }, function (err, res) {
                                     if (err) return cb(err);
-
-                                    return cb(null, role); // Success, return role object
-
+                                    role.principals.create({
+                                        principalType: RoleMapping.USER,
+                                        principalId: user.id
+                                    }, function (err, principal) {
+                                        if (err) return cb(err);
+                                        Staffuser.updateAll({ id: user.id }, { type: role.name }, function (err, info) {
+                                            if (err) return cb(err);
+                                            return cb(null, role); // Success, return role object
+                                        })
+                                    });
                                 });
+
                             } else {
                                 return cb(null, role); // Success, return role object
-
                             }
                         });
 
@@ -143,15 +147,15 @@ module.exports = function (Staffuser) {
 
             if (!_.isEmpty(user)) {
                 Role.findOne({ where: { id: roleId } }, function (err, role) { // Find the role...
-                    if (err)return cb(err);
+                    if (err) return cb(err);
 
                     if (!_.isEmpty(role)) {
                         RoleMapping.findOne({ where: { principalId: userId, roleId: roleId } }, function (err, roleMapping) { // Find the role mapping...
-                            if (err)return cb(err);
+                            if (err) return cb(err);
 
                             if (!_.isEmpty(roleMapping)) {
                                 roleMapping.destroy(function (err) {
-                                    if (err)return cb(err);
+                                    if (err) return cb(err);
 
                                     cb(null, role); // Success, return role object
                                 });
@@ -198,6 +202,19 @@ module.exports = function (Staffuser) {
         });
         next();
     });
+
+    Staffuser.afterRemote('update', function(ctx,user,next){
+        var Role = app.models.Role;
+        Role.find({ where: { name: user.type } }, function (err, res) {
+            if (err) throw err;
+            if (!_.isEmpty(res)) {
+                Staffuser.addRole(user.id, res[0].id, function (er, r) {
+                    if (er) throw er;
+                });
+            }
+        });
+        next();
+    })
 
 };
 
