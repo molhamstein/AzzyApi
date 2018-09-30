@@ -4,7 +4,8 @@
   "idInjection": true,
   "options": {
     "validateUpsert": true,
-    "strictObjectIDCoercion": true
+    "strictObjectIDCoercion": true,
+    "emailVerificationRequired": false
   },
   "properties": {
     "type": {
