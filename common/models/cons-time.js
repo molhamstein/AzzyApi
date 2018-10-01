@@ -122,11 +122,14 @@ module.exports = function (Constime) {
     Constime.afterRemote('create', function (ctx, ctime, next) {
         Constime.destroyById(ctime.id, function (err, ob) {
             if (err) throw err;
-            var d = moment(ctime.startDate).utcOffset(0);
-            console.log(d);
+            var d = moment(ctime.startDate);
+            d.tz('Asia/Tehran').format('ha z');
+            console.log(d.hour());
             var d1 = moment(d).add(30, 'm');
             var arr = new Array();
-            while (d1 < moment(ctime.endDate).utcOffset(0)) {
+            var end = moment(ctime.endDate);
+            end.tz('Asia/Tehran').format('ha z');
+            while (d1 < end) {
                 if (d.hour() == 20) {
                     var tmp = d;
                     tmp.add(1, 'd');
@@ -139,9 +142,9 @@ module.exports = function (Constime) {
                     d.minute(0);
                 }
                 d1 = moment(d).add(30, 'm');
-                console.log(d);
+                console.log(d.hour());
 
-                if (d1 <= moment(ctime.endDate).utcOffset(0)) {
+                if (d1 <= end) {
                     var elm = {
                         startDate: d.toDate(),
                         endDate: d1.toDate(),
