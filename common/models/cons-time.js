@@ -17,7 +17,7 @@ module.exports = function (Constime) {
                         include: {
                             relation: 'forms',
                             scope: {
-                                fields: {id: true, clientId: true, nameEnglish: true, surnameEnglish: true}
+                                fields: { id: true, clientId: true, nameEnglish: true, surnameEnglish: true }
                             }
                         },
                         where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd } },
@@ -36,7 +36,7 @@ module.exports = function (Constime) {
                         include: {
                             relation: 'forms',
                             scope: {
-                                fields: {id: true, clientId: true, nameEnglish: true, surnameEnglish: true}
+                                fields: { id: true, clientId: true, nameEnglish: true, surnameEnglish: true }
                             }
                         },
                         where: { startDate: { gte: dateStart }, endDate: { lte: dateEnd } },
@@ -63,46 +63,60 @@ module.exports = function (Constime) {
     });
 
     Constime.beforeRemote('create', function (ctx, ctime, next) {
-        var s, e;
-        s = new Date(ctx.args.data.startDate);
-        e = new Date(ctx.args.data.endDate);
-       // console.log(e);
-        if (s.getMinutes() < 15) {
-            s.setMinutes(0);
-        }
-        else if (s.getMinutes() >= 15 && s.getMinutes() < 45) {
-            s.setMinutes(30);
-        }
-        else {
-            s.setMinutes(0);
-            s = moment(s).add(1, 'h').toDate();
-        }
 
-        if (e.getMinutes() < 15) {
-            e.setMinutes(0);
-        }
-        else if (e.getMinutes() >= 15 && e.getMinutes() < 45) {
-            e.setMinutes(30);
-        }
-        else {
-            e.setMinutes(0);
-            e = moment(e).add(1, 'h').toDate();
-        }
-        s.setSeconds(0);
-        s.setMilliseconds(0);
-        e.setSeconds(0);
-        e.setMilliseconds(0);
-        //console.log(s);
-        //console.log(e);
-        
-        ctx.args.data.startDate = s;
-        ctx.args.data.endDate = e;
-        
-        var id = ctx.args.data.consId;
-        Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id }, function (err, res) {
-            if (err) throw err;
+        var user = app.models.staffuser;
+        user.findById(ctx.args.data.consId, function (err, res) {
+            if (err) return next(err);
+
+            if (!res) {
+                var error = new Error("consultant not found");
+                error.status = 404;
+                error.code = "consultantNotFound";
+                return next(error);
+            }
+            var s, e;
+            s = new Date(ctx.args.data.startDate);
+            e = new Date(ctx.args.data.endDate);
+            if (s.getMinutes() < 15) {
+                s.setMinutes(0);
+            }
+            else if (s.getMinutes() >= 15 && s.getMinutes() < 45) {
+                s.setMinutes(30);
+            }
+            else {
+                s.setMinutes(0);
+                s = moment(s).add(1, 'h').toDate();
+            }
+
+            if (e.getMinutes() < 15) {
+                e.setMinutes(0);
+            }
+            else if (e.getMinutes() >= 15 && e.getMinutes() < 45) {
+                e.setMinutes(30);
+            }
+            else {
+                e.setMinutes(0);
+                e = moment(e).add(1, 'h').toDate();
+            }
+            s.setSeconds(0);
+            s.setMilliseconds(0);
+            e.setSeconds(0);
+            e.setMilliseconds(0);
+            //console.log(s);
+            //console.log(e);
+
+            ctx.args.data.startDate = s;
+            ctx.args.data.endDate = e;
+
+            var id = ctx.args.data.consId;
+            Constime.destroyAll({ startDate: { gte: s }, endDate: { lte: e }, consId: id }, function (err, res) {
+                if (err) return next(err);
+                next();
+            });
         });
-        next();
+        // console.log(e);
+
+        
     });
 
     Constime.afterRemote('create', function (ctx, ctime, next) {
@@ -126,8 +140,8 @@ module.exports = function (Constime) {
                 }
                 d1 = moment(d).add(30, 'm');
                 console.log(d);
-                
-                if (d1 < moment(ctime.endDate).utcOffset(0)) {
+
+                if (d1 <= moment(ctime.endDate).utcOffset(0)) {
                     var elm = {
                         startDate: d.toDate(),
                         endDate: d1.toDate(),
@@ -199,10 +213,10 @@ module.exports = function (Constime) {
         http: { path: '/fetchApClientNo', verb: 'get' }
     });
 
-    Constime.deleteSlots = function(sDate, eDate, consId, cb){
+    Constime.deleteSlots = function (sDate, eDate, consId, cb) {
         Constime.destroyAll({ startDate: { gte: sDate }, endDate: { lte: eDate }, consId: consId }, function (err, res) {
             if (err) return cb(err);
-            cb(null , res);
+            cb(null, res);
         });
     }
     Constime.remoteMethod('deleteSlots', {
