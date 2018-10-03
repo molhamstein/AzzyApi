@@ -19,5 +19,5 @@
     },
     "cors": false
   },
-  "baseURL": "http://104.217.253.15/azzyPortal/dist/"
+  "baseURL": "http://104.217.253.15/azzyPortal/dist/#/"
 }
