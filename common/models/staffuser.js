@@ -193,38 +193,39 @@ module.exports = function (Staffuser) {
     Staffuser.afterRemote('create', function (ctx, user, next) {
         var Role = app.models.Role;
         Role.find({ where: { name: user.type } }, function (err, res) {
-            if (err) return next (err);
+            if (err) return next(err);
             if (!_.isEmpty(res)) {
                 Staffuser.addRole(user.id, res[0].id, function (er, r) {
-                    if (er) return next (er);
-                    Staffuser.updateAll({id:user.id} , {emailVerified: true}, function(err,info){
+                    if (er) return next(er);
+                    Staffuser.updateAll({ id: user.id }, { emailVerified: true }, function (err, info) {
                         if (err) return next(err);
                         next();
                     })
                 });
             }
         });
-        
+
     });
 
-    Staffuser.afterRemote('update', function(ctx,user,next){
+    Staffuser.afterRemote('update', function (ctx, user, next) {
         var Role = app.models.Role;
         Role.find({ where: { name: user.type } }, function (err, res) {
-            if (err) return next (err);
+            if (err) return next(err);
             if (!_.isEmpty(res)) {
                 Staffuser.addRole(user.id, res[0].id, function (er, r) {
-                    if (er) return next (er);
+                    if (er) return next(er);
                     next();
                 });
             }
         });
-        
+
     })
 
-    Staffuser.getConsultant= function(cb){
-        Staffuser.find({where: {type: "consultant"}},cb);
+    Staffuser.getConsultant = function (cb) {
+        Staffuser.find({ where: { type: "consultant" } }, cb);
     }
     Staffuser.remoteMethod('getConsultant', {
+        returns: { arg: 'getConsultant', type: 'array' },
         http: {
             path: '/getConsultant',
             verb: 'get'
