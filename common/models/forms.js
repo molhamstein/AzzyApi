@@ -455,7 +455,7 @@ module.exports = function (Forms) {
                 var p = (res.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
                 if (p < -2 * 3600 * 24) {
                     error = new Error("appointment is expired");
-                    error.status = 404;
+                    error.status = 403;
                     error.code = "expiredAppointment";
                     return cb(error);
                 }
@@ -490,7 +490,7 @@ module.exports = function (Forms) {
                                     var p = (form.consTimes.startDate.getTime() - d.getTime() - 2 * 1000 * 3600 * 24) / 1000;
                                     if (p < -2 * 3600 * 24) {
                                         error = new Error("appointment is expired");
-                                        error.status = 404;
+                                        error.status = 403;
                                         error.code = "expiredAppointment";
                                         return cb(error);
                                     }
