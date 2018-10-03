@@ -46,8 +46,7 @@
   },
   "final:after": {
     "strong-error-handler": {
-      "params": {
-      }
+      "params": {}
     }
   }
 }

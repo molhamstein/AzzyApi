@@ -459,7 +459,7 @@ module.exports = function (Forms) {
                     error.code = "expiredAppointment";
                     return cb(error);
                 }
-                
+
                 cons.updateAll({ clientId: form.clientId }, { clientId: null, open: true }, function (err, info) {
                     if (err) return cb(err);
                     Forms.updateAll({ id: formId }, { appointmentId: apId }, function (err, info) {
@@ -483,6 +483,13 @@ module.exports = function (Forms) {
 
                                 var client = app.models.client;
                                 var act = app.models.AccessToken;
+                                if (!form.Client) {
+                                    error = new Error("client not found");
+                                    error.status = 404;
+                                    error.code = "client_not_found";
+                                    return cb(error);
+                                }
+
                                 act.find({ where: { userId: form.Client.id } }, function (err, res) {
                                     if (err) return cb(err);
 
