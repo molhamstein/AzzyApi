@@ -618,7 +618,7 @@ module.exports = function (Forms) {
     Forms.remoteMethod('cancelAp', {
         accepts: [
             {
-                arg: 'id', type: 'any', description: 'Model id', required: true,
+                arg: 'id', type: 'any', description: 'form id', required: true,
                 http: { source: 'path' }
             }
         ],
@@ -647,8 +647,26 @@ module.exports = function (Forms) {
         http: { path: '/readForms', verb: 'get' }
     });
 
-
-
+    Forms.getClientForm = function (id , cb){
+        Forms.findById(id, {fields: {
+            dateOfArr: false,
+            status: false,
+            dateOfProc: false,
+            deleted: false,
+            textBoxAdmin: false,
+            textBoxNotes: false
+        }}, cb);
+    }
+    Forms.remoteMethod('getClientForm', {
+        accepts: [
+            {
+                arg: 'id', type: 'any', description: 'form id', required: true,
+                http: { source: 'path' }
+            }
+        ],
+        returns: { arg: 'getClientForm', type: 'object' },
+        http: { path: '/getClientForm/:id', verb: 'get' }
+    });
 
 
     Forms.writeForms = function () { };
