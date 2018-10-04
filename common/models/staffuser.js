@@ -214,7 +214,10 @@ module.exports = function (Staffuser) {
             if (!_.isEmpty(res)) {
                 Staffuser.addRole(user.id, res[0].id, function (er, r) {
                     if (er) return next(er);
-                    next();
+                    Staffuser.updateAll({ id: user.id }, { emailVerified: true }, function (err, info) {
+                        if (err) return next(err);
+                        next();
+                    })
                 });
             }
         });
