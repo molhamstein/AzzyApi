@@ -76,7 +76,7 @@ module.exports = function (app) {
   });
   
 
-  var managers = [{type: 'manager', username: 'admin', email: 'admin@azzy.com', password: 'password', emailVerified: true }];
+  var managers = [{type: 'manager', username: 'admin', email: 'control@azzyimmi.com', password: 'password', emailVerified: true }];
   User.findOne({ where: { email: managers[0].email } }, function (err, manager) {
     if (err) throw err;
 
