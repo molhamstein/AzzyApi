@@ -114,7 +114,8 @@ module.exports = function (Constime) {
                 error.code = 'AUTHORIZATION_REQUIRED';
                 return next(error);
             }
-            var user = app.models.staffuser;
+        }
+        var user = app.models.staffuser;
         user.findById(ctx.args.data.consId, function (err, res) {
             if (err) return next(err);
 
@@ -167,8 +168,8 @@ module.exports = function (Constime) {
         // console.log(e);
 
 
-        }
-        
+
+
 
     });
 
