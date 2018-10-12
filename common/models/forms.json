@@ -476,6 +476,14 @@
       "options": {
         "nestRemoting": true
       }
+    },
+    "fees": {
+      "type": "hasMany",
+      "model": "fee",
+      "foreignKey": "formId",
+      "options": {
+        "nestRemoting": true
+      }
     }
   },
   "acls": [

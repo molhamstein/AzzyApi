@@ -62,9 +62,59 @@ module.exports = function (Constime) {
         returns: { arg: 'readCalander', type: 'array' }
     });
 
-    Constime.beforeRemote('create', function (ctx, ctime, next) {
+    Constime.beforeRemote('create', function (ctx, constime, next) {
+        if (ctx.args.options.authorizedRoles.consultant) {
+            var f = "" + ctx.args.data.consId;
+            var c = "" + ctx.args.options.accessToken.userId
+            if (f != c) {
+                var error = new Error("Authorization Required");
+                error.status = 401;
+                error.code = 'AUTHORIZATION_REQUIRED';
+                return next(error);
+            }
+            next();
+        }
+    });
 
-        var user = app.models.staffuser;
+    Constime.beforeRemote('update', function (ctx, constime, next) {
+        if (ctx.args.options.authorizedRoles.consultant) {
+            var f = "" + ctx.args.data.consId;
+            var c = "" + ctx.args.options.accessToken.userId
+            if (f != c) {
+                var error = new Error("Authorization Required");
+                error.status = 401;
+                error.code = 'AUTHORIZATION_REQUIRED';
+                return next(error);
+            }
+            next();
+        }
+    });
+
+    Constime.beforeRemote('findById', function (ctx, constime, next) {
+        if (ctx.args.options.authorizedRoles.consultant) {
+            var f = "" + ctx.args.data.consId;
+            var c = "" + ctx.args.options.accessToken.userId
+            if (f != c) {
+                var error = new Error("Authorization Required");
+                error.status = 401;
+                error.code = 'AUTHORIZATION_REQUIRED';
+                return next(error);
+            }
+            next();
+        }
+    });
+
+    Constime.beforeRemote('create', function (ctx, ctime, next) {
+        if (ctx.args.options.authorizedRoles.consultant) {
+            var f = "" + ctx.args.data.consId;
+            var c = "" + ctx.args.options.accessToken.userId
+            if (f != c) {
+                var error = new Error("Authorization Required");
+                error.status = 401;
+                error.code = 'AUTHORIZATION_REQUIRED';
+                return next(error);
+            }
+            var user = app.models.staffuser;
         user.findById(ctx.args.data.consId, function (err, res) {
             if (err) return next(err);
 
@@ -116,7 +166,10 @@ module.exports = function (Constime) {
         });
         // console.log(e);
 
+
+        }
         
+
     });
 
     Constime.afterRemote('create', function (ctx, ctime, next) {

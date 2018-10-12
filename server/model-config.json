@@ -66,5 +66,9 @@
   "counters": {
     "dataSource": "mongoDS",
     "public": false
+  },
+  "fee": {
+    "dataSource": "mongoDS",
+    "public": true
   }
 }
