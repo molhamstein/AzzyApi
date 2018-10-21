@@ -182,7 +182,7 @@ module.exports = function (Forms) {
         http: { path: '/getContracts', verb: 'get' }
     });
 
-    Forms.changeStausToUnproc = function (formId, textBoxAdmin, cb) {
+    Forms.changeStatusToUnproc = function (formId, textBoxAdmin, cb) {
         Forms.updateAll({ id: formId }, {
             status: "unprocessed", consId: null, dateOfProc: null, textBoxAdmin: textBoxAdmin,
             appointmentId: null
@@ -195,13 +195,13 @@ module.exports = function (Forms) {
         });
 
     }
-    Forms.remoteMethod('changeStausToUnproc', {
+    Forms.remoteMethod('changeStatusToUnproc', {
         accepts: [
             { arg: 'formId', type: 'string' },
             { arg: 'textBoxAdmin', type: 'string' }
         ],
-        returns: { arg: 'changeStausToUnproc', type: 'object' },
-        http: { path: '/changeStausToUnproc', verb: 'put' }
+        returns: { arg: 'changeStatusToUnproc', type: 'object' },
+        http: { path: '/changeStatusToUnproc', verb: 'put' }
     });
 
     Forms.changeStatusToProc = function (formId, statusName, textBoxAdmin, cb) {
