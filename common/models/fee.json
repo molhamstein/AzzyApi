@@ -9,8 +9,11 @@
     "date": {
       "type": "date"
     },
+    "title": {
+      "type": "string"
+    },
     "value": {
-      "type": "string",
+      "type": "number",
       "required": true
     },
     "formId": {
