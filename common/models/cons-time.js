@@ -74,6 +74,7 @@ module.exports = function (Constime) {
             }
             next();
         }
+        next();
     });
 
     Constime.beforeRemote('update', function (ctx, constime, next) {
@@ -88,6 +89,7 @@ module.exports = function (Constime) {
             }
             next();
         }
+        next();
     });
 
     Constime.beforeRemote('findById', function (ctx, constime, next) {
@@ -102,6 +104,7 @@ module.exports = function (Constime) {
             }
             next();
         }
+        next();
     });
 
     Constime.beforeRemote('create', function (ctx, ctime, next) {
@@ -215,11 +218,9 @@ module.exports = function (Constime) {
             }
             Constime.create(arr, function (err, res) {
                 if (err) throw err;
+                next();
             });
         });
-
-
-        next();
 
     })
 

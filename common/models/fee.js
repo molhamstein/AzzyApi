@@ -20,6 +20,7 @@ module.exports = function (Fee) {
                 next();
             })
         }
+        next();
     });
 
     Fee.beforeRemote('update', function (ctx, fee, next) {
@@ -39,6 +40,7 @@ module.exports = function (Fee) {
                 next();
             })
         }
+        next();
     });
 
     Fee.beforeRemote('findById', function (ctx, fee, next) {
@@ -58,5 +60,6 @@ module.exports = function (Fee) {
                 next();
             })
         }
+        next();
     });
 };
