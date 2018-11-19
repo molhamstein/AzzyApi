@@ -5,6 +5,9 @@ var config = require('../../server/config.json');
 var loopback = require('loopback');
 var schedule = require('node-schedule');
 var _ = require('lodash');
+const HTMLToPDF = require('html5-to-pdf');
+let ejs = require('ejs');
+let fs = require('fs');
 var moment = require('moment');
 moment().format();
 
@@ -647,15 +650,17 @@ module.exports = function (Forms) {
         http: { path: '/readForms', verb: 'get' }
     });
 
-    Forms.getClientForm = function (id , cb){
-        Forms.findById(id, {fields: {
-            dateOfArr: false,
-            status: false,
-            dateOfProc: false,
-            deleted: false,
-            textBoxAdmin: false,
-            textBoxNotes: false
-        }}, cb);
+    Forms.getClientForm = function (id, cb) {
+        Forms.findById(id, {
+            fields: {
+                dateOfArr: false,
+                status: false,
+                dateOfProc: false,
+                deleted: false,
+                textBoxAdmin: false,
+                textBoxNotes: false
+            }
+        }, cb);
     }
     Forms.remoteMethod('getClientForm', {
         accepts: [
@@ -668,6 +673,64 @@ module.exports = function (Forms) {
         http: { path: '/getClientForm/:id', verb: 'get' }
     });
 
+    Forms.getContractPdf = function (id, cb) {
+        Forms.findById(id, function (err, form) {
+            if (err) return cb(err);
+            if (!form || form.status != "contracts") {
+                let error = new Error('form not found');
+                error.status = 404;
+                error.code = "FormNotFound";
+                return cb(error);
+            }
+            let Fee = app.models.fee;
+            Fee.find({ where: { formId: id } }, function (err, fee) {
+                if (err) return cb(err);
+                let clientData = {
+                    name: form.nameEnglish,
+                    email: form.email,
+                    phone: form.mobileNo,
+                    nameSp: form.nameEnglishSp,
+                    emailSp: form.emailSp,
+                    phoneSp: form.mobileNoSp,
+                    address: form.residentialAddressEnglish,
+                    fees: fee
+                };
+
+                var renderer = loopback.template(path.resolve(__dirname, '../../common/views/contract.ejs'));
+                var html_body = renderer(clientData);
+
+                const file = "contract-" + form.id + ".pdf";
+
+                const htmlToPDF = new HTMLToPDF({
+                    inputBody: html_body,
+                    outputPath: './contractsPDF/' + file,
+                    include: [{
+                        "type": "css",
+                        "filePath": "./common/views/css/style.css"
+                    }
+                    ],
+                    renderDelay: 1000,
+                    templatePath: './common/views'
+                });
+
+                htmlToPDF.build(error => {
+                    if (error != null) { return cb(error); }
+                    cb(null, { url: config.baseURL + "ContractPdf/" + file });
+                });
+            })
+        })
+    }
+
+    Forms.remoteMethod('getContractPdf', {
+        accepts: [
+            {
+                arg: 'id', type: 'any', description: 'form id', required: true,
+                http: { source: 'path' }
+            }
+        ],
+        returns: { arg: 'getContractPdf', type: 'object' },
+        http: { path: '/getContractPdf/:id', verb: 'get' }
+    });
 
     Forms.writeForms = function () { };
 
