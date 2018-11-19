@@ -5,7 +5,7 @@ module.exports = function(server) {
   var router = server.loopback.Router();
   router.get('/', server.loopback.status());
   router.get('/ContractPdf/:name' , function (req ,res){
-    res.sendFile('./contractsPDF/' + req.params.name);
+    res.sendFile('./azzyPortal/dist/#/contractsPDF/' + req.params.name);
   });
   server.use(router);
 };
