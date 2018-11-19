@@ -695,10 +695,10 @@ module.exports = function (Forms) {
                     address: form.residentialAddressEnglish,
                     fees: fee
                 };
-
+                console.log("1");
                 var renderer = loopback.template(path.resolve(__dirname, '../../common/views/contract.ejs'));
                 var html_body = renderer(clientData);
-
+                console.log("2");
                 const file = "contract-" + form.id + ".pdf";
 
                 const htmlToPDF = new HTMLToPDF({
@@ -715,6 +715,7 @@ module.exports = function (Forms) {
 
                 htmlToPDF.build(error => {
                     if (error != null) { return cb(error); }
+                    console.log("3");
                     cb(null, { url: config.baseURL + "ContractPdf/" + file });
                 });
             })
