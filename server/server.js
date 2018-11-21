@@ -20,8 +20,8 @@ app.use(function(req, res, next) {
     req.accessToken.save(next);
 });
 app.use('/contractPdf/:name', function(req, res, next) {
-  console.log(path.join('file://', __dirname, '../contractsPDF', req.params.name))
-  res.sendFile(path.join('file://', __dirname, '../contractsPDF', req.params.name));
+  console.log(path.join( __dirname, '../contractsPDF', req.params.name))
+  res.sendFile(path.join( __dirname, '../contractsPDF', req.params.name));
 });
 
 
