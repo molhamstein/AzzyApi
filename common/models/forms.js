@@ -701,9 +701,9 @@ module.exports = function (Forms) {
                 var image = path.join('file://', __dirname, '../views/image/1.jpg')
                 html_body = html_body.split("{{image}}").join(image);
                 var options = {
-                    format: "A4",
-                    renderDelay: 1000,
-                    zoomFactor: 0
+                    height: "11.69 ",
+                    width: "8.27in",
+                    renderDelay: 1500
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
                     if (err) return cb(err);
