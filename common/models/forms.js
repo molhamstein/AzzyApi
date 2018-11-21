@@ -5,9 +5,9 @@ var config = require('../../server/config.json');
 var loopback = require('loopback');
 var schedule = require('node-schedule');
 var _ = require('lodash');
-const HTMLToPDF = require('html5-to-pdf');
-let ejs = require('ejs');
+var pdf = require('html-pdf');
 let fs = require('fs');
+var path = require('path')
 var moment = require('moment');
 moment().format();
 
@@ -695,12 +695,20 @@ module.exports = function (Forms) {
                     address: form.residentialAddressEnglish,
                     fees: fee
                 };
-                console.log("1");
                 var renderer = loopback.template(path.resolve(__dirname, '../../common/views/contract.ejs'));
                 var html_body = renderer(clientData);
-                console.log("2");
                 const file = "contract-" + form.id + ".pdf";
-
+                var image = path.join('file://', __dirname, '../views/image/1.jpg')
+                html_body = html_body.split("{{image}}").join(image);
+                var options = {
+                    format: "A4",
+                    renderDelay: 1000
+                }
+                pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
+                    if (err) return cb(err);
+                    cb(null, { url: config.baseURL + "ContractPdf/" + file });
+                })
+                /*
                 const htmlToPDF = new HTMLToPDF({
                     inputBody: html_body,
                     outputPath: './contractsPDF/' + file,
@@ -716,8 +724,9 @@ module.exports = function (Forms) {
                 htmlToPDF.build(error => {
                     if (error != null) { return cb(error); }
                     console.log("3");
-                    cb(null, { url: config.baseURL + "ContractPdf/" + file });
+                    
                 });
+                */
             })
         })
     }
