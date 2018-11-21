@@ -1,5 +1,5 @@
 'use strict';
-
+const path = require('path');
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 
@@ -19,6 +19,10 @@ app.use(function(req, res, next) {
     req.accessToken.ttl     = 94608000; //three years
     req.accessToken.save(next);
 });
+app.use('/contractPdf/:name', function(req, res, next) {
+  res.sendFile(path.join('file://', __dirname, '../contractsPDF', req.params.name));
+});
+
 
 app.start = function() {
   // start the web server
