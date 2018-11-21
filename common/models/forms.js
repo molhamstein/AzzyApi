@@ -702,8 +702,8 @@ module.exports = function (Forms) {
                 html_body = html_body.split("{{image}}").join(image);
                 var options = {
                     renderDelay: 1000,
-                    width: "800px" ,
-                    height: "1131.6px",
+                    width: "900px" ,
+                    height: "1273px",
                     orientation: "portrait"
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
