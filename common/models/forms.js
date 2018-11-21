@@ -702,12 +702,9 @@ module.exports = function (Forms) {
                 html_body = html_body.split("{{image}}").join(image);
                 var options = {
                     renderDelay: 1000,
-                    border: {
-                        top: "2in",            // default is 0, units: mm, cm, in, px
-                        right: "1in",
-                        bottom: "2in",
-                        left: "1.5in"
-                      },
+                    width: "114mm" ,
+                    height: "162mm",
+                    orientation: "portrait"
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
                     if (err) return cb(err);
