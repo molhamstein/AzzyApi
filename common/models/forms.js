@@ -673,26 +673,6 @@ module.exports = function (Forms) {
         http: { path: '/getClientForm/:id', verb: 'get' }
     });
 
-    const run = async (file, html_body,cb) => {
-        const html5ToPDF = new HTMLToPDF({
-            inputBody: html_body,
-            outputPath: './contractsPDF/' + file,
-            include: [{
-                "type": "css",
-                "filePath": "./common/views/css/style.css"
-            }
-            ],
-            templatePath: "./common/views",
-            renderDelay: 1000,
-
-        });
-        await html5ToPDF.start()
-        await html5ToPDF.build()
-        await html5ToPDF.close()
-        console.log("DONE")
-        cb(null, { url: config.baseURL + "ContractPdf/" + file });
-    }
-
     Forms.getContractPdf = function (id, cb) {
         Forms.findById(id, function (err, form) {
             if (err) return cb(err);
@@ -715,35 +695,29 @@ module.exports = function (Forms) {
                     address: form.residentialAddressEnglish,
                     fees: fee
                 };
-
+                console.log("1");
                 var renderer = loopback.template(path.resolve(__dirname, '../../common/views/contract.ejs'));
                 var html_body = renderer(clientData);
+                console.log("2");
                 const file = "contract-" + form.id + ".pdf";
 
-                /* const htmlToPDF = new HTMLToPDF({
-                     inputBody: html_body,
-                     outputPath: './contractsPDF/' + file,
-                     include: [{
-                         "type": "css",
-                         "filePath": "./common/views/css/style.css"
-                     }
-                     ],
-                     renderDelay: 1000,
-                     templatePath: './common/views'
-                 });
- 
-                 htmlToPDF.build(error => {
-                     if (error != null) { return cb(error); 
-                     cb(null, { url: config.baseURL + "ContractPdf/" + file });
-                 });
-                 */
-                try {
-                    run(file,html_body,cb);
-                } catch (error) {
-                    return cb(error);
-                }
-                
+                const htmlToPDF = new HTMLToPDF({
+                    inputBody: html_body,
+                    outputPath: './contractsPDF/' + file,
+                    include: [{
+                        "type": "css",
+                        "filePath": "./common/views/css/style.css"
+                    }
+                    ],
+                    renderDelay: 1000,
+                    templatePath: './common/views'
+                });
 
+                htmlToPDF.build(error => {
+                    if (error != null) { return cb(error); }
+                    console.log("3");
+                    cb(null, { url: config.baseURL + "ContractPdf/" + file });
+                });
             })
         })
     }
