@@ -703,8 +703,7 @@ module.exports = function (Forms) {
                 var options = {
                     renderDelay: 1000,
                     width: "880px" ,
-                    height: "1244.7px",
-                    orientation: "portrait"
+                    height: "1244.7px"
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
                     if (err) return cb(err);
