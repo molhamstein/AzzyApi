@@ -702,8 +702,8 @@ module.exports = function (Forms) {
                 html_body = html_body.split("{{image}}").join(image);
                 var options = {
                     renderDelay: 1000,
-                    height: "1273px",
-                    width: "900px",
+                    height: "1414.5px",
+                    width: "1000px",
                     border: {
                         top: "18px", 
                         right: "0px",
