@@ -703,13 +703,7 @@ module.exports = function (Forms) {
                 var options = {
                     renderDelay: 1000,
                     height: "1414.5px",
-                    width: "1000px",
-                    border: {
-                        top: "18px", 
-                        right: "0px",
-                        bottom: "0px",
-                        left: "46px"
-                    }
+                    width: "1000px"
 
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
