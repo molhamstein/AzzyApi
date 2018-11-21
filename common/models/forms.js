@@ -703,7 +703,7 @@ module.exports = function (Forms) {
                 var options = {
                     renderDelay: 1000,
                     format: "A4",
-                    width: "770px",
+                    width: "880px",
                     border: {
                         top: "18px", 
                         right: "0px",
