@@ -706,7 +706,7 @@ module.exports = function (Forms) {
                 }
                 pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
                     if (err) return cb(err);
-                    cb(null, { url: config.baseURL + "ContractPdf/" + file });
+                    cb(null, { url: config.host + "contractPdf/" + file });
                 })
                 /*
                 const htmlToPDF = new HTMLToPDF({
