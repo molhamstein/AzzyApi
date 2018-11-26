@@ -1,7 +1,7 @@
 {
   "restApiRoot": "/api",
-  "host": "104.217.253.15",
-  "port": 2999,
+  "host": "178.62.233.91",
+  "port": 3000,
   "remoting": {
     "context": false,
     "rest": {
@@ -19,5 +19,5 @@
     },
     "cors": false
   },
-  "baseURL": "http://104.217.253.15/azzyPortal/dist/#/"
+  "baseURL": "http://www.azzyimmi.com"
 }
