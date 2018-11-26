@@ -162,7 +162,7 @@ module.exports = function (Forms) {
 
 
     Forms.getUnprocessedForms = function (cb) {
-        Forms.find({ where: { status: "unprocessed" }, order: 'dateOfArr' }, cb);
+        Forms.find({ where: { status: "unprocessed" }, order: 'dateOfArr', include: "Client" }, cb);
     }
     Forms.remoteMethod('getUnprocessedForms', {
         returns: { arg: 'unprocessedForms', type: 'array' },
@@ -170,7 +170,7 @@ module.exports = function (Forms) {
     });
 
     Forms.getProcessedForms = function (cb) {
-        Forms.find({ where: { status: { nin: ["unprocessed", "contracts"] } }, order: 'dateOfArr DESC' }, cb);
+        Forms.find({ where: { status: { nin: ["unprocessed", "contracts"] } }, order: 'dateOfArr DESC', include: "Client" }, cb);
     }
     Forms.remoteMethod('getProcessedForms', {
         returns: { arg: 'processedForms', type: 'array' },
@@ -178,7 +178,7 @@ module.exports = function (Forms) {
     });
 
     Forms.getContracts = function (cb) {
-        Forms.find({ where: { status: "contracts" }, order: 'dateOfArr' }, cb);
+        Forms.find({ where: { status: "contracts" }, order: 'dateOfArr', include: "Client", }, cb);
     }
     Forms.remoteMethod('getContracts', {
         returns: { arg: 'contracts', type: 'array' },
@@ -191,7 +191,7 @@ module.exports = function (Forms) {
             appointmentId: null
         }, function (err, info) {
             if (err) return cb(err);
-            Forms.findById(formId, function (err, form) {
+            Forms.findById(formId, { include: "Client" }, function (err, form) {
                 if (err) return cb(err);
                 cb(null, form);
             });
@@ -292,7 +292,7 @@ module.exports = function (Forms) {
     Forms.changeStatusToConsultation = function (formId, textBoxAdmin, consId, cb) {
         Forms.updateAll({ id: formId }, { status: "consultation", dateOfProc: new Date(), textBoxAdmin: textBoxAdmin, consId: consId }, function (err, res) {
             if (err) return cb(err);
-            Forms.findById(formId, function (err, form) {
+            Forms.findById(formId, { include: "Client" }, function (err, form) {
                 if (err) return cb(err);
 
                 var client = app.models.client;
@@ -436,7 +436,7 @@ module.exports = function (Forms) {
 
     Forms.selectAp = function (formId, apId, cb) {
         var error;
-        Forms.findById(formId, function (err, form) {
+        Forms.findById(formId, { include: "Client" }, function (err, form) {
             if (err) return cb(err);
             if (!form) {
                 error = new Error("form not found");
@@ -568,7 +568,7 @@ module.exports = function (Forms) {
         Forms.updateAll({ id: formId }, { appointmentId: null }, function (err, info) {
             if (err) return cb(err);
 
-            Forms.findById(formId, function (err, f) {
+            Forms.findById(formId, { include: "Client" }, function (err, f) {
                 if (err) return cb(err)
                 var client = app.models.client;
                 client.findById(f.clientId, function (err, resClient) {
@@ -642,7 +642,7 @@ module.exports = function (Forms) {
                 deleted: false,
                 dateOfProc: false,
                 id: false
-            }
+            }, include: "Client"
         }, cb);
     };
     Forms.remoteMethod('readForms', {
@@ -705,16 +705,16 @@ module.exports = function (Forms) {
                     format: "A4",
                     orientation: "portrait",
                     border: {
-                        top: "18px", 
+                        top: "18px",
                         right: "0px",
                         bottom: "0px",
                         left: "46px"
                     }
 
                 }
-                pdf.create(html_body,options).toFile('./contractsPDF/' + file,function(err,res){
+                pdf.create(html_body, options).toFile('./contractsPDF/' + file, function (err, res) {
                     if (err) return cb(err);
-                    cb(null, { url: config.host + ":"+config.port+"/contractPdf/" + file });
+                    cb(null, { url: config.host + ":" + config.port + "/contractPdf/" + file });
                 })
                 /*
                 const htmlToPDF = new HTMLToPDF({
