@@ -183,6 +183,9 @@
     "militaryDurationFrom": {
       "type": "date"
     },
+    "exemptionReason": {
+      "type" : "string"
+    },
     "militaryDurationTo": {
       "type": "date"
     },
@@ -341,6 +344,9 @@
     },
     "militaryDurationToSp": {
       "type": "date"
+    },
+    "exemptionReasonSp": {
+      "type" : "string"
     },
     "significantCurrentSicknessSp": {
       "type": "string"
