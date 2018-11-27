@@ -130,13 +130,16 @@ module.exports = function (Forms) {
 
                         Forms.sendEmail(form.email, sub, html_body, function (err) {
                             if (err) throw err;
+                            form['accessToken']=t;
+                            form['Client']=resClient;
+                            next();
                         });
                     });
                 })
 
             });
         });
-        next();
+        
     });
 
     Forms.updateOwnForm = function (id, updates, cb) {
@@ -749,6 +752,7 @@ module.exports = function (Forms) {
         returns: { arg: 'getContractPdf', type: 'object' },
         http: { path: '/getContractPdf/:id', verb: 'get' }
     });
+
 
     Forms.writeForms = function () { };
 
