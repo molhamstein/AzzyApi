@@ -6,6 +6,13 @@
     "validateUpsert": true,
     "strictObjectIDCoercion": true
   },
+  "scope": {
+    "include": [
+      {
+        "relation": "Client"
+      }
+    ]
+  },
   "properties": {
     "dateOfArr": {
       "type": "date"
