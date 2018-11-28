@@ -109,14 +109,14 @@ module.exports = function (Forms) {
             password: "0000",
             email: form.email
         }, function (err, resClient) {
-            if (err) throw err;
+            if (err) return next(err);
             client.login({ email: resClient.email, password: '0000', ttl: 1209600 }, function (err, t) {
-                if (err) throw err;
+                if (err) return next(err);
                 //console.log(t.id);
                 client.addRole(resClient.id, 5, function (err, res) {
-                    if (err) throw err;
+                    if (err) return next(err);
                     Forms.updateAll({ id: form.id }, { clientId: resClient.id }, function (err, info) {
-                        if (err) throw err;
+                        if (err) return next(err);
 
                         var sub = "confirming the receipt";
                         var email1 = {
@@ -129,17 +129,20 @@ module.exports = function (Forms) {
                         var html_body = renderer(email1);
 
                         Forms.sendEmail(form.email, sub, html_body, function (err) {
-                            if (err) throw err;
-                            form['accessToken']=t;
-                            form['Client']=resClient;
-                            next();
+                            if (err) return next(err);
                         });
+                        
+                        //console.log(resClient)
+                        form['token'] = t.id;
+                        form.clientNumber = resClient.clientNumber;
+                        next();
                     });
                 })
 
             });
         });
-        
+
+
     });
 
     Forms.updateOwnForm = function (id, updates, cb) {
