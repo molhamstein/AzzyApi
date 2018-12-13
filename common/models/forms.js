@@ -129,6 +129,7 @@ module.exports = function (Forms) {
                         var html_body = renderer(email1);
 
                         Forms.sendEmail(form.email, sub, html_body, function (err) {
+                            console.log("hi");
                             if (err) return next(err);
                         });
                         
