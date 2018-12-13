@@ -129,14 +129,18 @@ module.exports = function (Forms) {
                         var html_body = renderer(email1);
 
                         Forms.sendEmail(form.email, sub, html_body, function (err) {
-                            console.log("hi");
-                            if (err) return next(err);
+                            
+                            if (err) {
+                                console.log("hi");
+                                return next(err);
+                            }
+                            form['token'] = t.id;
+                            form.clientNumber = resClient.clientNumber;
+                            next();
                         });
                         
                         //console.log(resClient)
-                        form['token'] = t.id;
-                        form.clientNumber = resClient.clientNumber;
-                        next();
+                      
                     });
                 })
 
