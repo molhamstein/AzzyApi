@@ -83,15 +83,12 @@ module.exports = function (Forms) {
     Forms.beforeRemote('create', function (context, form, next) {
         context.args.data.dateOfArr = Date.now();
         context.args.data.status = "unprocessed";
-        if (context.args.data.status == "unprocessed") {
             //context.args.data.dateOfProc = " ";
             delete context.args.data.dateOfProc;
             delete context.args.data.consId;
             delete context.args.data.textBoxAdmin;
             delete context.args.data.textBoxNotes;
             delete context.args.data.appointmentId;
-
-        }
         next();
     });
 
@@ -127,11 +124,12 @@ module.exports = function (Forms) {
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
                         var html_body = renderer(email1);
-
+/*
                         Forms.sendEmail(form.email, sub, html_body, function (err) {
                             
-                        });
-                        
+                                              });
+                        */
+                       console.log("hello anoos**********************************");
                         //console.log(resClient)
                         form['token'] = t.id;
                         form.clientNumber = resClient.clientNumber;
