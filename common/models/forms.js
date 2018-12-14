@@ -112,33 +112,46 @@ module.exports = function (Forms) {
                 //console.log(t.id);
                 client.addRole(resClient.id, 5, function (err, res) {
                     if (err) return next(err);
-                    form.clientId = resClient.id
-
-                    var sub = "confirming the receipt";
-                    var email1 = {
-                        clientName: form.nameEnglish + " " + form.surnameEnglish,
-                        clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                        clientNumber: resClient.clientNumber,
-                        formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
-                    };
-                    var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
-                    var html_body = renderer(email1);
-
-                    Forms.sendEmail(form.email, sub, html_body, function (err) {
+                    Forms.updateAll({ id: form.id }, { clientId: resClient.id }, function (err, info) {
                         if (err) return next(err);
-                    });
-                    //console.log(resClient)
-                    form['token'] = t.id;
-                    form.clientNumber = resClient.clientNumber;
-                    next();
 
+                        var sub = "confirming the receipt";
+                        var email1 = {
+                            clientName: form.nameEnglish + " " + form.surnameEnglish,
+                            clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                            clientNumber: resClient.clientNumber,
+                            formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
+                        };
+                        var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
+                        var html_body = renderer(email1);
+
+                        Forms.sendEmail(form.email, sub, html_body, function (err) {
+
+                        });
+                        form['token'] = t.id;
+                        form.clientNumber = resClient.clientNumber;
+                        next();
+                    });
                 })
 
             });
         });
-
-
     });
+
+    Forms.beforeRemote('deleteById', function (ctx, form, next) {
+        Forms.findById(ctx.args.id, function (err, res) {
+            if (err) return next(err);
+            let Client = app.models.client;
+            if (res && res.clientId) {
+                Client.destroyById(res.clientId, function (err, res) {
+                    if (err) return next(err);
+                    next();
+                })
+            }
+            else next();
+        })
+
+    })
 
     Forms.updateOwnForm = function (id, updates, cb) {
         Forms.updateAll({
