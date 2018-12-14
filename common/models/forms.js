@@ -83,12 +83,12 @@ module.exports = function (Forms) {
     Forms.beforeRemote('create', function (context, form, next) {
         context.args.data.dateOfArr = Date.now();
         context.args.data.status = "unprocessed";
-            //context.args.data.dateOfProc = " ";
-            delete context.args.data.dateOfProc;
-            delete context.args.data.consId;
-            delete context.args.data.textBoxAdmin;
-            delete context.args.data.textBoxNotes;
-            delete context.args.data.appointmentId;
+        //context.args.data.dateOfProc = " ";
+        delete context.args.data.dateOfProc;
+        delete context.args.data.consId;
+        delete context.args.data.textBoxAdmin;
+        delete context.args.data.textBoxNotes;
+        delete context.args.data.appointmentId;
         next();
     });
 
@@ -112,29 +112,26 @@ module.exports = function (Forms) {
                 //console.log(t.id);
                 client.addRole(resClient.id, 5, function (err, res) {
                     if (err) return next(err);
-                    Forms.updateAll({ id: form.id }, { clientId: resClient.id }, function (err, info) {
-                        if (err) return next(err);
+                    form.clientId = resClient.id
 
-                        var sub = "confirming the receipt";
-                        var email1 = {
-                            clientName: form.nameEnglish + " " + form.surnameEnglish,
-                            clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                            clientNumber: resClient.clientNumber,
-                            formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
-                        };
-                        var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
-                        var html_body = renderer(email1);
-/*
-                        Forms.sendEmail(form.email, sub, html_body, function (err) {
-                            
-                                              });
-                        */
-                       console.log("hello anoos**********************************");
-                        //console.log(resClient)
-                        form['token'] = t.id;
-                        form.clientNumber = resClient.clientNumber;
-                        next();
+                    var sub = "confirming the receipt";
+                    var email1 = {
+                        clientName: form.nameEnglish + " " + form.surnameEnglish,
+                        clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
+                        clientNumber: resClient.clientNumber,
+                        formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
+                    };
+                    var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
+                    var html_body = renderer(email1);
+
+                    Forms.sendEmail(form.email, sub, html_body, function (err) {
+                        if (err) return next(err);
                     });
+                    //console.log(resClient)
+                    form['token'] = t.id;
+                    form.clientNumber = resClient.clientNumber;
+                    next();
+
                 })
 
             });
