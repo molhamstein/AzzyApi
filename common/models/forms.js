@@ -310,6 +310,12 @@ module.exports = function (Forms) {
                 if (err) return cb(err);
 
                 var client = app.models.client;
+                if (!form){
+                    let error= new Error("form not found");
+                    error.status = 404;
+                    error.code = "formNotFound";
+                    return cb(error);
+                }
                 client.findById(form.clientId, function (err, resClient) {
                     if (err) return cb(err);
                     var act = app.models.AccessToken;
