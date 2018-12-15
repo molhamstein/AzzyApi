@@ -310,8 +310,8 @@ module.exports = function (Forms) {
                 if (err) return cb(err);
 
                 var client = app.models.client;
-                if (!form){
-                    let error= new Error("form not found");
+                if (!form) {
+                    let error = new Error("form not found");
                     error.status = 404;
                     error.code = "formNotFound";
                     return cb(error);
@@ -590,10 +590,22 @@ module.exports = function (Forms) {
 
             Forms.findById(formId, { include: "Client" }, function (err, f) {
                 if (err) return cb(err)
+                if (!f) {
+                    let error = new Error('form not found');
+                    error.status = 404;
+                    error.code = "FormNotFound";
+                    return cb(error);
+                }
                 var client = app.models.client;
                 client.findById(f.clientId, function (err, resClient) {
                     if (err) return cb(err);
                     var act = app.models.AccessToken;
+                    if (!resClient) {
+                        let error = new Error("client not found");
+                        error.status = 404;
+                        error.code = "client_not_found";
+                        return cb(error);
+                    }
                     act.find({ where: { userId: resClient.id } }, function (err, res) {
                         if (err) return cb(err);
                         var cons = app.models.consTime;
