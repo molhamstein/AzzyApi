@@ -1,6 +1,6 @@
 {
   "restApiRoot": "/api",
-  "host": "http://azzyimmigration.com:3000/api",
+  "host": "http://azzyimmigration.com",
   "port": 3000,
   "remoting": {
     "context": false,
