@@ -63,6 +63,19 @@
     "dataSource": "myEmailDataSource",
     "public": true
   },
+  "uploadFile": {
+    "dataSource": "files",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "upload": true,
+          "download": true
+        }
+      }
+    }
+  },
   "counters": {
     "dataSource": "mongoDS",
     "public": false

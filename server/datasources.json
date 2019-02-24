@@ -28,5 +28,12 @@
         }
       }
     ]
+  },
+  "files": {
+    "name": "files",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "./uploadFiles"
   }
+
 }
