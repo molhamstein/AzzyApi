@@ -1133,6 +1133,12 @@ module.exports = function (Forms) {
         fileName: 'form' + Date.now() + '.xlsx'
       };
       var exportData = []
+
+      var militaryDurationFrom = ""
+      var militaryDurationTo = ""
+      var militaryDurationFromSp = ""
+      var militaryDurationToSp = ""
+      var dateOfBirthPerSp = ""
       data.forEach(element => {
         var object = {}
         var clientNumber
@@ -1142,6 +1148,23 @@ module.exports = function (Forms) {
           else
             clientNumber = client.clientNumber
         })
+        if (element.militaryDurationFromSp != null)
+          militaryDurationFromSp = element.militaryDurationFromSp.toString()
+
+        if (element.militaryDurationToSp != null)
+          militaryDurationToSp = element.militaryDurationToSp.toString();
+
+        if (element.militaryDurationFrom != null)
+          militaryDurationFrom = element.militaryDurationFrom.toString()
+
+        if (element.militaryDurationTo != null)
+          militaryDurationTo = element.militaryDurationTo.toString();
+
+
+        if (element.dateOfBirthPerSp != null)
+          dateOfBirthPerSp = element.dateOfBirthPerSp.toString();
+
+
         object = {
           "Status": element.status,
           "Client Number": clientNumber,
@@ -1153,6 +1176,135 @@ module.exports = function (Forms) {
           "English Address": element.residentialAddressEnglish,
           "Farsi Address": element.residentialAddressFarsi,
           "Date Of Arrival": element.dateOfArr.toString(),
+          "Marital Status": element.maritalStatus,
+          "Number Of Children": element.numberOfChildren,
+          "Line Phone Number": element.lLandlinePhoneNo,
+          "Skype": element.skypeID,
+          "English": element.goodEnglish,
+          "Writing En": element.writingEn,
+          "Listening En": element.listeningEn,
+          "Reading En": element.readingEn,
+          "Speaking En": element.speakingEn,
+          "Overall En": element.overallEn,
+          "Associate Field": element.assocField,
+          "Associate University": element.assocUniversity,
+          "Associate City Of University": element.assocCityOfUniversity,
+          "Associate Year Of Graduation": element.assocYearOfGraduation,
+          "Bachelor Field": element.bacField,
+          "Bachelor University": element.bacUniversity,
+          "Bachelor City Of University": element.bacCityOfUniversity,
+          "Bachelor Year Of Graduation": element.bacYearOfGraduation,
+          "Master Field": element.masterField,
+          "Master University": element.masterUniversity,
+          "Master City Of University": element.masterCityOfUniversity,
+          "Master Year Of Graduation": element.masterYearOfGraduation,
+          "PHD Field": element.PHDField,
+          "PHD University": element.PHDUniversity,
+          "PHD City Of University": element.PHDCityOfUniversity,
+          "PHD Year Of Graduation": element.PHDYearOfGraduation,
+          "Field Of Working": element.fieldOfWorking,
+          "Relateded Years Paid": element.relatedEdYearsPaid,
+          "Relateded Years Non Paid": element.relatedEdYearsNonPaid,
+          "Non Relateded Years Paid": element.nonRelatedEdYearsPaid,
+          "Non Relateded Years Non Paid": element.nonRelatedEdYearsNonPaid,
+          "Military Status": element.militaryStatus,
+          "Exemption Reason": element.exemptionReason,
+          "Military Place": element.militaryPlace,
+          "Military Duration From": militaryDurationFrom,
+          "Military Duration To": militaryDurationTo,
+          "Significant Current Sickness": element.significantCurrentSickness,
+          "Surgery Past Or Future": element.surgeryPastOrFuture,
+          "Australia Family Relation": element.australiaFamilyRelation,
+          "Australia Living State": element.australiaLivingState,
+          "Australia Living City": element.australiaLivingCity,
+          "Australia Visa Type": element.australiaVisaType,
+
+          "Spouse English Name": element.nameEnglishSp + " " + element.surnameEnglishSp,
+          "Spouse Farsi Name": element.nameFarsiSp + " " + element.surnameFarsiSp,
+          "Spouse Mobile Phone": element.mobileNoSp,
+          "Spouse Email": element.emailSp,
+          "Spouse Date Of Birth": dateOfBirthPerSp,
+          "Spouse Marital Status": element.maritalStatusSp,
+          "Spouse Number Of Children": element.numberOfChildrenSp,
+          "Spouse Line Phone Number": element.lLandlinePhoneNoSp,
+          "Spouse Skype": element.skypeIDSp,
+          "Spouse English Address": element.residentialAddressEnglishSp,
+          "Spouse Farsi Address": element.residentialAddressFarsiSp,
+          "Spouse English": element.goodEnglishSp,
+          "Spouse Writing En": element.writingEnSp,
+          "Spouse Listening En": element.listeningEnSp,
+          "Spouse Reading En": element.readingEnSp,
+          "Spouse Speaking En": element.speakingEnSp,
+          "Spouse Overall En": element.overallEnSp,
+          "Spouse Associate Field": element.assocFieldSp,
+          "Spouse Associate University": element.assocUniversitySp,
+          "Spouse Associate City Of University": element.assocCityOfUniversitySp,
+          "Spouse Associate Year Of Graduation": element.assocYearOfGraduationSp,
+          "Spouse Bachelor Field": element.bacFieldSp,
+          "Spouse Bachelor University": element.bacUniversitySp,
+          "Spouse Bachelor City Of University": element.bacCityOfUniversitySp,
+          "Spouse Bachelor Year Of Graduation": element.bacYearOfGraduationSp,
+          "Spouse Master Field": element.masterFieldSp,
+          "Spouse Master University": element.masterUniversitySp,
+          "Spouse Master City Of University": element.masterCityOfUniversitySp,
+          "Spouse Master Year Of Graduation": element.masterYearOfGraduationSp,
+          "Spouse PHD Field": element.PHDFieldSp,
+          "Spouse PHD University": element.PHDUniversitySp,
+          "Spouse PHD City Of University": element.PHDCityOfUniversitySp,
+          "Spouse PHD Year Of Graduation": element.PHDYearOfGraduationSp,
+          "Spouse Field Of Working": element.fieldOfWorkingSp,
+          "Spouse Relateded Years Paid": element.relatedEdYearsPaidSp,
+          "Spouse Relateded Years Non Paid": element.relatedEdYearsNonPaidSp,
+          "Spouse Non Relateded Years Paid": element.nonRelatedEdYearsPaidSp,
+          "Spouse Non Relateded Years Non Paid": element.nonRelatedEdYearsNonPaidSp,
+
+          "Spouse Military Status": element.militaryStatusSp,
+          "Spouse Exemption Reason": element.exemptionReasonSp,
+          "Spouse Military Place": element.militaryPlaceSp,
+          "Spouse Military Duration From": militaryDurationFromSp,
+          "Spouse Military Duration To": militaryDurationToSp,
+
+          "Spouse Significant Current Sickness": element.significantCurrentSicknessSp,
+          "Spouse Surgery Past Or Future": element.surgeryPastOrFutureSp,
+          "Spouse Australia Family Relation": element.australiaFamilyRelationSp,
+          "Spouse Australia Living State": element.australiaLivingStateSp,
+          "Spouse Australia Living City": element.australiaLivingCitySp,
+          "Spouse Australia Visa Type": element.australiaVisaTypeSp,
+          "How Know": element.howKnow,
+          "Main Applicant": element.mainApplicant,
+          "Spouse Main Applicant": element.mainApplicantSp,
+          "Dependant": element.dependant,
+          "Spouse Dependant": element.dependantSp,
+
+          "Occupation To Be Assessed": element.occupationToBeAssessed,
+          "Years Of Work Experience": element.yearsOfWorkExperience,
+          "Assessment Organization": element.assessmentOrganization,
+          "Professional Installments": element.professionalInstallments,
+          "Points From Education": element.pointsFromEducation,
+          "Points From Work Experience": element.pointsFromWorkExperience,
+          "Points From Spouse": element.pointsFromSpouse,
+          "Points From English Test": element.pointsFromEnglishTest,
+          "Points From NAATI Test": element.pointsFromNAATITest,
+          "Points From State Sponsorship": element.pointsFromStateSponsorship,
+          "Points From Family Sponsorship": element.pointsFromFamilySponsorship,
+          "Total Points": element.totalPoints,
+          
+          "Spouse Occupation To Be Assessed": element.occupationToBeAssessedSp,
+          "Spouse Years Of Work Experience": element.yearsOfWorkExperienceSp,
+          "Spouse Assessment Organization": element.assessmentOrganizationSp,
+          "Spouse Professional Installments": element.professionalInstallmentsSp,
+          "Spouse Points From Education": element.pointsFromEducationSp,
+          "Spouse Points From Work Experience": element.pointsFromWorkExperienceSp,
+          "Spouse Points From Spouse": element.pointsFromSpouseSp,
+          "Spouse Points From English Test": element.pointsFromEnglishTestSp,
+          "Spouse Points From NAATI Test": element.pointsFromNAATITestSp,
+          "Spouse Points From State Sponsorship": element.pointsFromStateSponsorshipSp,
+          "Spouse Points From Family Sponsorship": element.pointsFromFamilySponsorshipSp,
+          "Spouse Total Points": element.totalPointsSp,
+
+          "Professional Total": element.professionalTotal
+
+
         }
         exportData.push(object);
       });
