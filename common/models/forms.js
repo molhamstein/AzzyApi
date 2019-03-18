@@ -1071,7 +1071,7 @@ module.exports = function (Forms) {
             top: "18px",
             right: "0px",
             bottom: "0px",
-            left: "46px"
+            left: "0px"
           }
 
         }
