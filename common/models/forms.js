@@ -1062,7 +1062,6 @@ module.exports = function (Forms) {
         var html_body = renderer(clientData);
         const file = "contract-" + form.id + ".pdf";
         var image = path.join('file://', __dirname, '../views/image/1.jpg')
-        image="P:\Azzy/AzzyApi/common/views/image/1.jpg"
         html_body = html_body.split("{{image}}").join(image);
         var options = {
           renderDelay: 1000,
