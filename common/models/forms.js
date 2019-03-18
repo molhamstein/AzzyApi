@@ -1062,6 +1062,7 @@ module.exports = function (Forms) {
         var html_body = renderer(clientData);
         const file = "contract-" + form.id + ".pdf";
         var image = path.join('file://', __dirname, '../views/image/1.jpg')
+        image="P:\Azzy/AzzyApi/common/views/image/1.jpg"
         html_body = html_body.split("{{image}}").join(image);
         var options = {
           renderDelay: 1000,
@@ -1072,13 +1073,17 @@ module.exports = function (Forms) {
             right: "0px",
             bottom: "0px",
             left: "0px"
-          }
+          },
+          "header": {
+            "height": "108px",
+            "contents": '<img id="p1dimg1" style="background-color:red" src="' + image + '}}">'
+          },
 
         }
         pdf.create(html_body, options).toFile('./contractsPDF/' + file, function (err, res) {
           if (err) return cb(err);
           cb(null, {
-            url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
+            url: "http://localhost:3000" + "/contractPdf/" + file
           });
         })
         /*
