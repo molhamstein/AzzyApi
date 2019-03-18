@@ -413,9 +413,6 @@
     "professionalInstallments": {
       "type": "number"
     },
-    "professionalInstallmentsSp": {
-      "type": "number"
-    },
     "professionalTotal": {
       "type": "number"
     },

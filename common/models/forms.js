@@ -276,7 +276,6 @@ module.exports = function (Forms) {
       status: "unprocessed",
       consId: null,
       dateOfProc: null,
-      textBoxAdmin: textBoxAdmin,
       appointmentId: null
     }, function (err, info) {
       if (err) return cb(err);
@@ -423,13 +422,14 @@ module.exports = function (Forms) {
     }
   });
 
-  Forms.changeStatusToConsultation = function (formId, textBoxAdmin, consId, cb) {
+  Forms.changeStatusToConsultation = function (formId, textBoxAdmin, consId, fee, cb) {
     Forms.updateAll({
       id: formId
     }, {
       status: "consultation",
       dateOfProc: new Date(),
       textBoxAdmin: textBoxAdmin,
+      professionalInstallments: fee,
       consId: consId
     }, function (err, res) {
       if (err) return cb(err);
@@ -505,6 +505,10 @@ module.exports = function (Forms) {
         arg: 'consId',
         type: 'string'
       },
+      {
+        arg: 'fee',
+        type: 'number'
+      }
     ],
     returns: {
       arg: 'changeStatusToConsultation',
@@ -1288,11 +1292,10 @@ module.exports = function (Forms) {
           "Points From State Sponsorship": element.pointsFromStateSponsorship,
           "Points From Family Sponsorship": element.pointsFromFamilySponsorship,
           "Total Points": element.totalPoints,
-          
+
           "Spouse Occupation To Be Assessed": element.occupationToBeAssessedSp,
           "Spouse Years Of Work Experience": element.yearsOfWorkExperienceSp,
           "Spouse Assessment Organization": element.assessmentOrganizationSp,
-          "Spouse Professional Installments": element.professionalInstallmentsSp,
           "Spouse Points From Education": element.pointsFromEducationSp,
           "Spouse Points From Work Experience": element.pointsFromWorkExperienceSp,
           "Spouse Points From Spouse": element.pointsFromSpouseSp,
