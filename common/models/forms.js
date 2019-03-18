@@ -1082,7 +1082,9 @@ module.exports = function (Forms) {
         pdf.create(html_body, options).toFile('./contractsPDF/' + file, function (err, res) {
           if (err) return cb(err);
           cb(null, {
-            url: "http://localhost:3000" + "/contractPdf/" + file
+            
+            url: "http://azzyimmigration.com" + "/contractPdf/" + file
+            // url: "http://localhost:3000" + "/contractPdf/" + file
           });
         })
         /*
