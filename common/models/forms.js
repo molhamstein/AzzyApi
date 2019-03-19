@@ -1087,8 +1087,8 @@ module.exports = function (Forms) {
           if (err) return cb(err);
           cb(null, {
 
-            url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
-            // url: "http://localhost:3000" + "/contractPdf/" + file
+            // url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
+            url: "http://localhost:3000" + "/contractPdf/" + file
           });
         })
         /*
