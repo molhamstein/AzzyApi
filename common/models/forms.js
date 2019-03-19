@@ -1069,9 +1069,9 @@ module.exports = function (Forms) {
           orientation: "portrait",
           border: {
             top: "18px",
-            right: "0px",
+            right: "20px",
             bottom: "0px",
-            left: "0px"
+            left: "20px"
           },
           "header": {
             "height": "100",
