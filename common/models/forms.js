@@ -33,7 +33,7 @@ module.exports = function (Forms) {
   });
 
   Forms.validatesInclusionOf('maritalStatus', {
-    in: ['single', 'married', 'divorced', 'widowed'],
+    in: ['withPartner', 'withOutPartner'],
     message: 'not valid marital status',
     allowBlank: true
   });

@@ -234,16 +234,16 @@ module.exports = function (Constime) {
       while (d1 < end) {
         console.log("d.hour()")
         console.log(d.hour())
-        if (d.hour() >= 20) {
-          var tmp = d;
-          tmp.add(1, 'd');
-          tmp.hour(7);
-          tmp.minute(0);
-          d = tmp;
-        } else if (d.hour() < 7) {
-          d.hour(7);
-          d.minute(0);
-        }
+        // if (d.hour() >= 20) {
+        //   var tmp = d;
+        //   tmp.add(1, 'd');
+        //   tmp.hour(7);
+        //   tmp.minute(0);
+        //   d = tmp;
+        // } else if (d.hour() < 7) {
+        //   d.hour(7);
+        //   d.minute(0);
+        // }
         d1 = moment(d).add(30, 'm');
         // console.log(d.hour());
 
