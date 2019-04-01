@@ -375,17 +375,17 @@ module.exports = function (Forms) {
               ttl: 1209600
             }, function (err, t) {
               if (err) throw err;
-              var sub = "Further Information Request, " + form.nameEnglish + ", " + form.Client.clientNumber;
+              var sub = "Further Information Request, "  + form.Client.clientNumber;
               var email3 = {
                 clientNumber: form.Client.clientNumber,
                 clientName: form.nameEnglish + " " + form.surnameEnglish,
                 clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
                 textbox: form.textBoxAdmin,
-                formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id,
+                formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id + "?lang=" + form.lang,
               };
               var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email3.ejs'));
               var html_body = renderer(email3);
-
+              console.log(email3);
               Forms.sendEmail(form.email, sub, html_body, function (err) {
                 if (err) return cb(err);
                 return cb(null, form);
@@ -567,7 +567,8 @@ module.exports = function (Forms) {
               consName: f.consTimes.consultant.username,
               fee: f.professionalInstallments,
               date: locolaizeDate(f.consTimes.startDate, f.timeZone).toDateString(),
-              time: locolaizeDate(f.consTimes.startDate, f.timeZone).toTimeString() + " till " + locolaizeDate(form.consTimes.endDate, f.timeZone).toTimeString(),
+              timeEn: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
+              timeFr: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
               cancelLink: config.baseURL + '/cancel-appointment/' + f.id + '/' + t.id
             };
             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email6.ejs'));
@@ -650,6 +651,13 @@ module.exports = function (Forms) {
    * @param {Function(Error)} callback
    */
 
+  function printTime(d) {
+    var minutes = d.getMinutes().toString().length == 1 ? '0' + d.getMinutes() : d.getMinutes(),
+      hours = d.getHours().toString().length == 1 ? '0' + d.getHours() : d.getHours(),
+      ampm = d.getHours() >= 12 ? 'pm' : 'am';
+    return hours + ':' + minutes + ampm;
+
+  }
   Forms.testDate = function (timeZone, callback) {
     // create Date object for current location
     var d = new Date();
@@ -811,7 +819,8 @@ module.exports = function (Forms) {
                           consName: form.consTimes.consultant.username,
                           fee: form.professionalInstallments,
                           date: locolaizeDate(form.consTimes.startDate, form.timeZone).toDateString(),
-                          time: locolaizeDate(form.consTimes.startDate, form.timeZone).toTimeString() + " till " + locolaizeDate(form.consTimes.endDate, form.timeZone).toTimeString(),
+                          timeEn: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
+                          timeFr: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
                           cancelLink: config.baseURL + '/cancel-appointment/' + form.id + '/' + t.id
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
@@ -915,7 +924,7 @@ module.exports = function (Forms) {
 
                   if (err) return cb(err);
 
-                  var sub = "Your Appointment cancel, " + f.nameEnglish + ", " + resClient.clientNumber;
+                  var sub = "Your Appointment cancel, "+ resClient.clientNumber;
 
                   var email7 = {
                     subject: sub,

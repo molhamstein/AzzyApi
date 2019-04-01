@@ -18,6 +18,10 @@
       "type": "number",
       "default": 0
     },
+    "lang": {
+      "type": "string",
+      "default": "en"
+    },
     "dateOfArr": {
       "type": "date"
     },
