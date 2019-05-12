@@ -138,7 +138,7 @@ module.exports = function (Forms) {
               clientName: form.nameEnglish + " " + form.surnameEnglish,
               clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
               clientNumber: resClient.clientNumber,
-              formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id
+              formLink: config.baseURL + '/edit-client/' + form.id + '/' + t.id + "?lang=" + form.lang
             };
             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email1.ejs'));
             var html_body = renderer(email1);
@@ -375,7 +375,7 @@ module.exports = function (Forms) {
               ttl: 1209600
             }, function (err, t) {
               if (err) throw err;
-              var sub = "Further Information Request, "  + form.Client.clientNumber;
+              var sub = "Further Information Request, " + form.Client.clientNumber;
               var email3 = {
                 clientNumber: form.Client.clientNumber,
                 clientName: form.nameEnglish + " " + form.surnameEnglish,
@@ -472,7 +472,7 @@ module.exports = function (Forms) {
                     clientNumber: resClient.clientNumber,
                     clientName: form.nameEnglish + " " + form.surnameEnglish,
                     clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                    calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id,
+                    calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id + "?lang=" + form.lang,
                     textbox: form.textBoxAdmin,
                     fee: form.professionalInstallments,
                   };
@@ -562,14 +562,14 @@ module.exports = function (Forms) {
               clientNumber: f.Client.clientNumber,
               clientName: f.nameEnglish + " " + form.surnameEnglish,
               clientNameFarsi: f.nameFarsi + " " + form.surnameFarsi,
-              calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id,
+              calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id + "?lang=" + form.lang,
               location: f.consTimes.location,
               consName: f.consTimes.consultant.username,
               fee: f.professionalInstallments,
               date: locolaizeDate(f.consTimes.startDate, f.timeZone).toDateString(),
               timeEn: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
               timeFr: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
-              cancelLink: config.baseURL + '/cancel-appointment/' + f.id + '/' + t.id
+              cancelLink: config.baseURL + '/cancel-appointment/' + f.id + '/' + t.id + "?lang=" + form.lang
             };
             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email6.ejs'));
             var html_body = renderer(email6);
@@ -661,7 +661,7 @@ module.exports = function (Forms) {
   Forms.testDate = function (timeZone, callback) {
     // create Date object for current location
     var d = new Date();
-    console.log(d)
+    console.log(d.toString())
     // convert to msec
     // add local time zone offset
     // get UTC time in msec
@@ -691,7 +691,7 @@ module.exports = function (Forms) {
     // return time as a string
   }
 
-  Forms.selectAp = function (formId, apId, cb) {
+  Forms.selectAp = function (formId, apId, timeZone = null, cityZone = null, cb) {
     var error;
     Forms.findById(formId, {
       include: "Client"
@@ -702,6 +702,15 @@ module.exports = function (Forms) {
         error.status = 404;
         error.code = "formNotFound";
         return cb(error);
+      }
+      if (timeZone) {
+        form.timeZone = timeZone;
+        form.cityZone = cityZone;
+        form.updateAttributes({
+          "cityZone": cityZone,
+          "timeZone": timeZone
+        })
+        // form.save();
       }
       var consFormId = form.consId;
       var cons = app.models.consTime;
@@ -762,7 +771,7 @@ module.exports = function (Forms) {
               }, function (err, f) {
                 if (err) return cb(err);
                 var form = f.toJSON();
-                console.log(form.consTimes.startDate.toDateString())
+                // console.log(form.consTimes.startDate.toDateString())
 
                 var client = app.models.client;
                 var act = app.models.AccessToken;
@@ -800,6 +809,8 @@ module.exports = function (Forms) {
                     if (err) return cb(err);
                     client.addRole(form.Client.id, 7, function (err, res) {
                       if (err) return cb(err);
+                      // client.addRole(form.Client.id, 6, function (err, res) {
+
                       var con = app.models.consTime;
                       con.updateAll({
                         id: apId
@@ -814,14 +825,15 @@ module.exports = function (Forms) {
                           clientNumber: form.Client.clientNumber,
                           clientName: form.nameEnglish + " " + form.surnameEnglish,
                           clientNameFarsi: form.nameFarsi + " " + form.surnameFarsi,
-                          calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id,
+                          calandarLink: config.baseURL + '/client-calendar/' + form.id + '/' + t.id + "?lang=" + form.lang,
                           location: form.consTimes.location,
                           consName: form.consTimes.consultant.username,
                           fee: form.professionalInstallments,
                           date: locolaizeDate(form.consTimes.startDate, form.timeZone).toDateString(),
                           timeEn: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
                           timeFr: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
-                          cancelLink: config.baseURL + '/cancel-appointment/' + form.id + '/' + t.id
+                          cityZone: form.cityZone,
+                          cancelLink: config.baseURL + '/cancel-appointment/' + form.id + '/' + t.id + "?lang=" + form.lang
                         };
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
                         var html_body = renderer(email5);
@@ -840,9 +852,8 @@ module.exports = function (Forms) {
           });
         });
       });
-
-    });
-
+    })
+    // });
   }
   Forms.remoteMethod('selectAp', {
     accepts: [{
@@ -856,6 +867,14 @@ module.exports = function (Forms) {
       },
       {
         arg: 'apId',
+        type: 'string'
+      },
+      {
+        arg: 'timeZone',
+        type: 'number'
+      },
+      {
+        arg: 'cityZone',
         type: 'string'
       }
     ],
@@ -916,32 +935,42 @@ module.exports = function (Forms) {
                 client.logout(res[0].id);
               client.removeRole(resClient.id, 7, function (err, res) {
                 if (err) return cb(err);
-                client.login({
-                  email: resClient.email,
-                  password: '0000',
-                  ttl: 3600 * 24 * 365 * 2
-                }, function (err, t) {
-
+                client.addRole(resClient.id, 6, function (err, res) {
                   if (err) return cb(err);
 
-                  var sub = "Your Appointment cancel, "+ resClient.clientNumber;
+                  client.login({
+                    email: resClient.email,
+                    password: '0000',
+                    ttl: 3600 * 24 * 365 * 2
+                  }, function (err, t) {
 
-                  var email7 = {
-                    subject: sub,
-                    clientNumber: resClient.clientNumber,
-                    clientName: f.nameEnglish + " " + f.surnameEnglish,
-                    clientNameFarsi: f.nameFarsi + " " + f.surnameFarsi,
-                    calandarLink: config.baseURL + '/client-calendar/' + f.clientId + '/' + t.id,
-                  };
-                  var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
-                  var html_body = renderer(email7);
-
-                  Forms.sendEmail(f.email, sub, html_body, function (err) {
                     if (err) return cb(err);
-                    return cb(null, f);
+
+                    var sub = "Your Appointment cancel, " + resClient.clientNumber;
+
+                    var email7 = {
+                      subject: sub,
+                      clientNumber: resClient.clientNumber,
+                      clientName: f.nameEnglish + " " + f.surnameEnglish,
+                      clientNameFarsi: f.nameFarsi + " " + f.surnameFarsi,
+                      calandarLink: config.baseURL + '/client-calendar/' + formId + '/' + t.id + "?lang=" + f.lang,
+                    };
+                    console.log(email7)
+                    var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email7.ejs'));
+                    var html_body = renderer(email7);
+
+                    Forms.sendEmail(f.email, sub, html_body, function (err) {
+                      if (err) return cb(err);
+                      return cb(null, {
+                        calandarLink: config.baseURL + '/client-calendar/' + formId + '/' + t.id + "?lang=" + f.lang
+                      });
+
+                    });
                   });
                 });
               });
+
+
             });
 
 
@@ -949,11 +978,9 @@ module.exports = function (Forms) {
 
 
         });
-
-
       });
-    });
 
+    })
   }
   Forms.remoteMethod('cancelAp', {
     accepts: [{
@@ -1013,7 +1040,6 @@ module.exports = function (Forms) {
     Forms.findById(id, {
       fields: {
         dateOfArr: false,
-        status: false,
         dateOfProc: false,
         deleted: false,
         textBoxAdmin: false,
@@ -1065,8 +1091,13 @@ module.exports = function (Forms) {
           emailSp: form.emailSp,
           phoneSp: form.mobileNoSp,
           address: form.residentialAddressEnglish,
-          fees: fee
+          fees: fee,
+          totalFee: 0
         };
+
+        fee.forEach(element => {
+          clientData.totalFee += element.value
+        });
         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/contract.ejs'));
         var html_body = renderer(clientData);
         const file = "contract-" + form.id + ".pdf";
@@ -1094,11 +1125,35 @@ module.exports = function (Forms) {
         }
         pdf.create(html_body, options).toFile('./contractsPDF/' + file, function (err, res) {
           if (err) return cb(err);
-          cb(null, {
 
-            url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
-            // url: "http://localhost:3000" + "/contractPdf/" + file
-          });
+          if (form.hasCardInTrello) {
+            cb(null, {
+
+              url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
+              // url: "http://localhost:3000" + "/contractPdf/" + file
+            });
+          } else {
+            let client = app.models.client;
+            client.findById(form.clientId, function (err, resClient) {
+              var emailTrello = {
+                "mobileNo": form.mobileNo,
+                "email": form.email,
+              };
+              var renderer = loopback.template(path.resolve(__dirname, '../../common/views/emailTrello.ejs'));
+              var html_body = renderer(emailTrello);
+              var sub = resClient.clientNumber + " " + form.surnameEnglish + " " + form.nameEnglish
+              console.log(sub);
+              Forms.sendEmail("controlazzyimmigration+udqrok7lym5d5u11mtkw@boards.trello.com", sub, html_body, function (err) {
+                console.log("Email sent");
+                form.updateAttributes({"hasCardInTrello":true})
+                cb(null, {
+
+                  url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
+                  // url: "http://localhost:3000" + "/contractPdf/" + file
+                });
+              });
+            })
+          }
         })
         /*
         const htmlToPDF = new HTMLToPDF({

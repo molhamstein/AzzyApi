@@ -7,7 +7,44 @@ moment().format();
 
 module.exports = function (Constime) {
 
-  Constime.readCalander = function (dateStart, dateEnd, ids, cb) {
+  Constime.readCalander = function (dateStart, dateEnd, ids, available = false, cb) {
+    var whereSlotes = {}
+    console.log("dateStart");
+    console.log(new Date(dateStart));
+    console.log("dateEnd");
+    console.log(new Date(dateEnd))
+    if (available) {
+      whereSlotes = {
+        "and": [{
+            startDate: {
+              gte: new Date(dateStart)
+            }
+          },
+          {
+            endDate: {
+              lte:new Date(dateEnd)
+            }
+          },
+          {
+            "open": true
+          }
+        ]
+      }
+    } else {
+      whereSlotes = {
+        "and": [{
+            startDate: {
+              gte: dateStart
+            }
+          },
+          {
+            endDate: {
+              lte: dateEnd
+            }
+          }
+        ]
+      }
+    }
     if (_.isEmpty(ids)) {
       var stf = app.models.staffuser;
       stf.find({
@@ -25,14 +62,7 @@ module.exports = function (Constime) {
                 }
               }
             },
-            where: {
-              startDate: {
-                gte: dateStart
-              },
-              endDate: {
-                lte: dateEnd
-              }
-            },
+            where: whereSlotes,
             order: 'startDate'
           }
         },
@@ -57,14 +87,7 @@ module.exports = function (Constime) {
                 }
               }
             },
-            where: {
-              startDate: {
-                gte: dateStart
-              },
-              endDate: {
-                lte: dateEnd
-              }
-            },
+            where: whereSlotes,
             order: 'startDate'
           }
         },
@@ -92,6 +115,10 @@ module.exports = function (Constime) {
         arg: 'ids',
         type: 'array'
       },
+      {
+        arg: 'available',
+        type: 'boolean'
+      }
     ],
     http: {
       path: '/readCalander',
@@ -263,8 +290,8 @@ module.exports = function (Constime) {
         d = d1;
       }
       Constime.create(arr, function (err, res) {
-          if (err) throw err;
-          next();
+        if (err) throw err;
+        next();
       });
     });
 

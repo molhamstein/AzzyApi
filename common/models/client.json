@@ -15,7 +15,7 @@
     },
     "clientNumber": {
       "type": "number",
-      "default": 0
+      "default": 2000
     }
   },
   "validations": [],

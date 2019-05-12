@@ -18,6 +18,14 @@
       "type": "number",
       "default": 0
     },
+    "hasCardInTrello":{
+      "type": "boolean",
+      "default": false
+    },
+    "cityZone": {
+      "type": "string",
+      "default": ""
+    },
     "lang": {
       "type": "string",
       "default": "en"
@@ -803,7 +811,7 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$owner",
+      "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "getClientForm"
     },
