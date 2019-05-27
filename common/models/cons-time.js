@@ -22,7 +22,7 @@ module.exports = function (Constime) {
           },
           {
             endDate: {
-              lte:new Date(dateEnd)
+              lte: new Date(dateEnd)
             }
           },
           {
@@ -334,6 +334,93 @@ module.exports = function (Constime) {
   });
 
 
+  Constime.getCloserCons = function (cb) {
+    console.log("getCloserCons")
+    Constime.findOne({
+      where: {
+        "startDate": {
+          "gt": new Date()
+        },
+        "open": true
+      },
+      sort: {
+        "startDate": 1
+      }
+    }, function (err, date) {
+      if (err)
+        return cb(err)
+      return cb(err, date)
+    })
+  }
+
+
+  Constime.getConsInMonth = function (startDate, timezone, cb) {
+
+    var today = new Date()
+    var from = new Date(startDate)
+    from.setDate(1);
+    from.setHours(0);
+    from.setMinutes(0);
+
+    if (from.getTime() < today.getTime())
+      from = today;
+
+    var to = new Date(startDate)
+    var to = new Date(startDate.getFullYear(), startDate.getMonth(), 31);
+    to.setHours(23);
+    to.setMinutes(59);
+
+
+    console.log("from")
+    console.log(from)
+    console.log("to")
+    console.log(to)
+    Constime.getDataSource().connector.connect(function (err, db) {
+
+      var collection = db.collection('consTime');
+      var cursor = collection.aggregate([{
+          $match: {
+            "startDate": {
+              $gte: from,
+              $lt: to
+            },
+            "open": true
+          }
+        },
+        {
+          $project: {
+            'lts': {
+              '$add': ['$startDate', timezone * 3600 * 1000]
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              day: {
+                $dayOfMonth: "$lts"
+              },
+              month: {
+                $month: "$lts"
+              },
+              year: {
+                $year: "$lts"
+              }
+            },
+            count: {
+              $sum: 1
+            }
+          }
+        }
+      ])
+      cursor.get(function (err, data) {
+        cb(null, data)
+      })
+
+    })
+  }
+
+
   Constime.fetchApClientNo = function (num, cb) {
     var client = app.models.client;
     client.find({
@@ -405,6 +492,40 @@ module.exports = function (Constime) {
     http: {
       path: '/deleteSlots',
       verb: 'delete'
+    }
+  });
+
+  Constime.remoteMethod('getCloserCons', {
+    accepts: [],
+    returns: {
+      arg: 'CloserCons',
+      type: 'object'
+    },
+    http: {
+      path: '/getCloserCons',
+      verb: 'get'
+    }
+  });
+
+  Constime.remoteMethod('getConsInMonth', {
+    accepts: [{
+        arg: 'startDate',
+        require: true,
+        type: 'date'
+      },
+      {
+        arg: 'timezone',
+        require: true,
+        type: 'number'
+      }
+    ],
+    returns: {
+      arg: 'getConsInMonth',
+      type: 'object'
+    },
+    http: {
+      path: '/getConsInMonth',
+      verb: 'get'
     }
   });
 
