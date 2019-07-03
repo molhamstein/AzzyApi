@@ -362,8 +362,8 @@ module.exports = function (Constime) {
     from.setHours(0);
     from.setMinutes(0);
 
-    if (from.getTime() < today.getTime())
-      from = today;
+    // if (from.getTime() < today.getTime())
+    //   from = today;
 
     var to = new Date(startDate)
     var to = new Date(startDate.getFullYear(), startDate.getMonth(), 31);
