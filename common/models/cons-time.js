@@ -5,6 +5,9 @@ var _ = require('lodash');
 var moment = require('moment');
 moment().format();
 
+const ObjectId = require('mongodb').ObjectId
+
+
 module.exports = function (Constime) {
 
   Constime.readCalander = function (dateStart, dateEnd, ids, available = false, cb) {
@@ -354,27 +357,30 @@ module.exports = function (Constime) {
   }
 
 
-  Constime.getConsInMonth = function (startDate, timezone, cb) {
+  Constime.getConsInMonth = function (startDate, timezone, consId, cb) {
 
     var today = new Date()
-    var from = new Date(startDate)
+    var from = startDate
     from.setDate(1);
     from.setHours(0);
     from.setMinutes(0);
 
-    // if (from.getTime() < today.getTime())
-    //   from = today;
+    if (from.getTime() < today.getTime())
+      from = today;
 
     var to = new Date(startDate)
-    var to = new Date(startDate.getFullYear(), startDate.getMonth(), 31);
-    to.setHours(23);
-    to.setMinutes(59);
+    var to = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+    to.setHours(0);
+    to.setMinutes(0);
 
 
     console.log("from")
     console.log(from)
     console.log("to")
     console.log(to)
+    console.log("consId")
+    console.log(consId)
+
     Constime.getDataSource().connector.connect(function (err, db) {
 
       var collection = db.collection('consTime');
@@ -384,7 +390,8 @@ module.exports = function (Constime) {
               $gte: from,
               $lt: to
             },
-            "open": true
+            "open": true,
+            "consId": ObjectId(consId)
           }
         },
         {
@@ -517,6 +524,11 @@ module.exports = function (Constime) {
         arg: 'timezone',
         require: true,
         type: 'number'
+      },
+      {
+        arg: 'consId',
+        require: true,
+        type: 'string'
       }
     ],
     returns: {

@@ -7,18 +7,16 @@
     "strictObjectIDCoercion": true
   },
   "scope": {
-    "include": [
-      {
-        "relation": "Client"
-      }
-    ]
+    "include": [{
+      "relation": "Client"
+    }]
   },
   "properties": {
     "timeZone": {
       "type": "number",
       "default": 0
     },
-    "hasCardInTrello":{
+    "hasCardInTrello": {
       "type": "boolean",
       "default": false
     },
@@ -58,6 +56,10 @@
     },
     "consId": {
       "type": "string"
+    },
+    "currency": {
+      "type": "string",
+      "default": "IRR"
     },
     "appointmentId": {
       "type": "string",
@@ -512,8 +514,7 @@
       }
     }
   },
-  "acls": [
-    {
+  "acls": [{
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
@@ -825,47 +826,37 @@
   ],
   "methods": {
     "testDate": {
-      "accepts": [
-        {
-          "arg": "timeZone",
-          "type": "number",
-          "required": true,
-          "description": ""
-        }
-      ],
+      "accepts": [{
+        "arg": "timeZone",
+        "type": "number",
+        "required": true,
+        "description": ""
+      }],
       "returns": [],
       "description": "",
-      "http": [
-        {
-          "path": "/testDate",
-          "verb": "get"
-        }
-      ]
+      "http": [{
+        "path": "/testDate",
+        "verb": "get"
+      }]
     },
     "exportForms": {
-      "accepts": [
-        {
-          "arg": "filter",
-          "type": "object",
-          "required": true,
-          "description": ""
-        }
-      ],
-      "returns": [
-        {
-          "arg": "result",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
+      "accepts": [{
+        "arg": "filter",
+        "type": "object",
+        "required": true,
+        "description": ""
+      }],
+      "returns": [{
+        "arg": "result",
+        "type": "object",
+        "root": true,
+        "description": ""
+      }],
       "description": "",
-      "http": [
-        {
-          "path": "/exportForms",
-          "verb": "get"
-        }
-      ]
+      "http": [{
+        "path": "/exportForms",
+        "verb": "get"
+      }]
     }
   }
 }

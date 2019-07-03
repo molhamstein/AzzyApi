@@ -1092,7 +1092,8 @@ module.exports = function (Forms) {
           phoneSp: form.mobileNoSp,
           address: form.residentialAddressEnglish,
           fees: fee,
-          totalFee: 0
+          totalFee: 0,
+          currency:form.currency
         };
 
         fee.forEach(element => {
