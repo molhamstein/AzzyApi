@@ -337,14 +337,15 @@ module.exports = function (Constime) {
   });
 
 
-  Constime.getCloserCons = function (cb) {
+  Constime.getCloserCons = function (consId, cb) {
     console.log("getCloserCons")
     Constime.findOne({
       where: {
         "startDate": {
           "gt": new Date()
         },
-        "open": true
+        "open": true,
+        "consId": ObjectId(consId)
       },
       sort: {
         "startDate": 1
@@ -503,7 +504,11 @@ module.exports = function (Constime) {
   });
 
   Constime.remoteMethod('getCloserCons', {
-    accepts: [],
+    accepts: [{
+      arg: 'consId',
+      require: true,
+      type: 'string'
+    }],
     returns: {
       arg: 'CloserCons',
       type: 'object'
