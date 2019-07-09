@@ -359,37 +359,53 @@ module.exports = function (Constime) {
 
 
   Constime.getConsInMonth = function (startDate, timezone, consId, cb) {
-
-    var today = new Date()
+    var now = new Date()
     var from = startDate
     from.setDate(1);
-    from.setHours(0);
+    from.setUTCHours(0);
     from.setMinutes(0);
 
-    if (from.getTime() < today.getTime())
-      from = today;
-
-    var to = new Date(startDate)
-    var to = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-    to.setHours(0);
-    to.setMinutes(0);
+    var tempFrom = new Date(from.getTime() + timezone * 60 * 60 * 1000)
 
 
-    console.log("from")
-    console.log(from)
+    if (tempFrom.getTime() < now.getTime()) {
+      from.setDate(now.getDate() + 1)
+      from.setUTCHours(0)
+      from.setMinutes(0)
+      tempFrom = new Date(from.getTime() - timezone * 60 * 60 * 1000);
+      console.log("tempFrom/////////")
+      console.log(tempFrom)
+    }
+
+    // var to = new Date(startDate)
+    var to = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 0, 0));
+
+    var tempTo = new Date(to.getTime() - timezone * 60 * 60 * 1000);
+
+    console.log("startDate");
+    console.log(startDate);
+    console.log("from");
+    console.log(from);
+    console.log("tempFrom");
+    console.log(tempFrom);
+    console.log("now");
+    console.log(now);
     console.log("to")
     console.log(to)
+    console.log("tempTo")
+    console.log(tempTo)
     console.log("consId")
     console.log(consId)
 
     Constime.getDataSource().connector.connect(function (err, db) {
 
       var collection = db.collection('consTime');
-      var cursor = collection.aggregate([{
+      var cursor = collection.aggregate([
+        {
           $match: {
             "startDate": {
-              $gte: from,
-              $lt: to
+              $gte: tempFrom,
+              $lt: tempTo
             },
             "open": true,
             "consId": ObjectId(consId)
@@ -399,7 +415,9 @@ module.exports = function (Constime) {
           $project: {
             'lts': {
               '$add': ['$startDate', timezone * 3600 * 1000]
-            }
+            },
+            "open": 1,
+            "consId": 1
           }
         },
         {

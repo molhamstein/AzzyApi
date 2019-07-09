@@ -35,10 +35,12 @@ module.exports = function (client) {
         if (err)
           throw err;
         else if (data == null) {
+          console.log("old number")
           ctx.instance.clientNumber = 213001;
           next();
         } else {
-          ctx.instance.clientNumber = data.clientNumber++;
+          console.log("new number")
+          ctx.instance.clientNumber = data.clientNumber + 1;
           next();
         }
 
