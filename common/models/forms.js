@@ -1084,7 +1084,7 @@ module.exports = function (Forms) {
       }, function (err, fee) {
         if (err) return cb(err);
         let clientData = {
-          name: form.nameEnglish,
+          name: form.nameEnglish + " " + form.surnameEnglish,
           email: form.email,
           phone: form.mobileNo,
           nameSp: form.nameEnglishSp,
@@ -1093,7 +1093,7 @@ module.exports = function (Forms) {
           address: form.residentialAddressEnglish,
           fees: fee,
           totalFee: 0,
-          currency:form.currency
+          currency: form.currency
         };
 
         fee.forEach(element => {
@@ -1146,7 +1146,9 @@ module.exports = function (Forms) {
               console.log(sub);
               Forms.sendEmail("controlazzyimmigration+udqrok7lym5d5u11mtkw@boards.trello.com", sub, html_body, function (err) {
                 console.log("Email sent");
-                form.updateAttributes({"hasCardInTrello":true})
+                form.updateAttributes({
+                  "hasCardInTrello": true
+                })
                 cb(null, {
 
                   url: "http://azzyimmigration.com:3000" + "/contractPdf/" + file
