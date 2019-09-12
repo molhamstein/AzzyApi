@@ -133,20 +133,20 @@ module.exports = function (Constime) {
     }
   });
 
-  Constime.beforeRemote('create', function (ctx, constime, next) {
-    if (ctx.args.options.authorizedRoles.consultant) {
-      var f = "" + ctx.args.data.consId;
-      var c = "" + ctx.args.options.accessToken.userId
-      if (f != c) {
-        var error = new Error("Authorization Required");
-        error.status = 401;
-        error.code = 'AUTHORIZATION_REQUIRED';
-        return next(error);
-      }
-      next();
-    }
-    next();
-  });
+  // Constime.beforeRemote('create', function (ctx, constime, next) {
+  //   if (ctx.args.options.authorizedRoles.consultant) {
+  //     var f = "" + ctx.args.data.consId;
+  //     var c = "" + ctx.args.options.accessToken.userId
+  //     if (f != c) {
+  //       var error = new Error("Authorization Required");
+  //       error.status = 401;
+  //       error.code = 'AUTHORIZATION_REQUIRED';
+  //       return next(error);
+  //     }
+  //     next();
+  //   }
+  //   next();
+  // });
 
   Constime.beforeRemote('update', function (ctx, constime, next) {
     if (ctx.args.options.authorizedRoles.consultant) {
@@ -202,22 +202,16 @@ module.exports = function (Constime) {
       var s, e;
       s = new Date(ctx.args.data.startDate);
       e = new Date(ctx.args.data.endDate);
-      if (s.getMinutes() < 15) {
+      if (s.getMinutes() < 30) {
         s.setMinutes(0);
-      } else if (s.getMinutes() >= 15 && s.getMinutes() < 45) {
-        s.setMinutes(30);
       } else {
-        s.setMinutes(0);
-        s = moment(s).add(1, 'h').toDate();
+        s.setMinutes(30);
       }
 
-      if (e.getMinutes() < 15) {
+      if (e.getMinutes() < 30) {
         e.setMinutes(0);
-      } else if (e.getMinutes() >= 15 && e.getMinutes() < 45) {
+      }  else {
         e.setMinutes(30);
-      } else {
-        e.setMinutes(0);
-        e = moment(e).add(1, 'h').toDate();
       }
       s.setSeconds(0);
       s.setMilliseconds(0);
@@ -228,7 +222,10 @@ module.exports = function (Constime) {
 
       ctx.args.data.startDate = s;
       ctx.args.data.endDate = e;
-
+      console.log("s")
+      console.log(s)
+      console.log("e")
+      console.log(e)
       var id = ctx.args.data.consId;
       Constime.destroyAll({
         startDate: {
@@ -261,7 +258,7 @@ module.exports = function (Constime) {
       var arr = new Array();
       var end = moment(ctime.endDate);
       end.tz('Asia/Tehran').format('ha z');
-      while (d1 < end) {
+      while (d1 <= end) {
         console.log("d.hour()")
         console.log(d.hour())
         // if (d.hour() >= 20) {
