@@ -10,6 +10,8 @@ let fs = require('fs');
 var path = require('path')
 var moment = require('moment');
 const mongoXlsx = require('mongo-xlsx');
+var momenttz = require('moment-timezone');
+
 
 moment().format();
 
@@ -478,7 +480,7 @@ module.exports = function (Forms) {
                   };
                   var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email4.ejs'));
                   var html_body = renderer(email4);
-
+                  console.log(email4.calandarLink);
                   Forms.sendEmail(form.email, sub, html_body, function (err) {
                     if (err) return cb(err);
                     return cb(null, form);
@@ -566,14 +568,13 @@ module.exports = function (Forms) {
               location: f.consTimes.location,
               consName: f.consTimes.consultant.username,
               fee: f.professionalInstallments,
-              date: locolaizeDate(f.consTimes.startDate, f.timeZone).toDateString(),
-              timeEn: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
-              timeFr: printTime(locolaizeDate(f.consTimes.startDate, f.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, f.timeZone)),
+              date: printDate(locolaizeDate(f.consTimes.startDate, f.city)),
+              timeEn: printTime(locolaizeDate(f.consTimes.startDate, f.city)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, f.city)),
+              timeFr: printTime(locolaizeDate(f.consTimes.startDate, f.city)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, f.city)),
               cancelLink: config.baseURL + '/cancel-appointment/' + f.id + '/' + t.id + "?lang=" + form.lang
             };
             var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email6.ejs'));
             var html_body = renderer(email6);
-
             Forms.sendEmail(f.email, sub, html_body, function (err) {
               if (err) throw err;
               console.log("reminder: " + f.email);
@@ -652,11 +653,15 @@ module.exports = function (Forms) {
    */
 
   function printTime(d) {
-    var minutes = d.getMinutes().toString().length == 1 ? '0' + d.getMinutes() : d.getMinutes(),
-      hours = d.getHours().toString().length == 1 ? '0' + d.getHours() : d.getHours(),
-      ampm = d.getHours() >= 12 ? 'pm' : 'am';
-    return hours + ':' + minutes + ampm;
+    var minutes = d.minute().toString().length == 1 ? '0' + d.minute() : d.minute(),
+      hours = d.hours().toString().length == 1 ? '0' + d.hours() : d.hours();
+    // ampm = d.hours() >= 12 ? 'pm' : 'am';
+    return hours + ':' + minutes;
 
+  }
+
+  function printDate(d) {
+    return moment(d).format('dddd, MMMM DD YYYY');
   }
   Forms.testDate = function (timeZone, callback) {
     // create Date object for current location
@@ -675,23 +680,19 @@ module.exports = function (Forms) {
     console.log("The local time in  is " + nd);
     callback(null);
   };
+  console.log(printDate(momenttz().tz("Asia/Tehran")));
 
-  function locolaizeDate(date, timeZone) {
-    var d = new Date(date);
-    console.log(d)
-    // convert to msec
-    // add local time zone offset
-    // get UTC time in msec
-    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-
-    // create new Date object for different city
-    // using supplied offset
-    var nd = new Date(utc + (3600000 * timeZone));
-    return nd;
-    // return time as a string
+  function locolaizeDate(date, city) {
+    console.log("data")
+    console.log(date)
+    console.log("city")
+    console.log(city)
+    console.log("momenttz")
+    console.log(momenttz(date).tz(city))
+    return momenttz(date).tz(city)
   }
 
-  Forms.selectAp = function (formId, apId, timeZone = null, cityZone = null, cb) {
+  Forms.selectAp = function (formId, apId, timeZone = null, city = null, cb) {
     var error;
     Forms.findById(formId, {
       include: "Client"
@@ -705,9 +706,9 @@ module.exports = function (Forms) {
       }
       if (timeZone) {
         form.timeZone = timeZone;
-        form.cityZone = cityZone;
+        form.city = city;
         form.updateAttributes({
-          "cityZone": cityZone,
+          "city": city,
           "timeZone": timeZone
         })
         // form.save();
@@ -829,12 +830,14 @@ module.exports = function (Forms) {
                           location: form.consTimes.location,
                           consName: form.consTimes.consultant.username,
                           fee: form.professionalInstallments,
-                          date: locolaizeDate(form.consTimes.startDate, form.timeZone).toDateString(),
-                          timeEn: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
-                          timeFr: printTime(locolaizeDate(form.consTimes.startDate, form.timeZone)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, form.timeZone)),
-                          cityZone: form.cityZone,
+                          date: printDate(locolaizeDate(form.consTimes.startDate, form.city)),
+                          timeEn: printTime(locolaizeDate(form.consTimes.startDate, form.city)) + " to " + printTime(locolaizeDate(form.consTimes.endDate, form.city)),
+                          timeFr: printTime(locolaizeDate(form.consTimes.startDate, form.city)) + " تا " + printTime(locolaizeDate(form.consTimes.endDate, form.city)),
+                          cityZone: form.city,
                           cancelLink: config.baseURL + '/cancel-appointment/' + form.id + '/' + t.id + "?lang=" + form.lang
                         };
+                        console.log(email5)
+
                         var renderer = loopback.template(path.resolve(__dirname, '../../common/views/email5.ejs'));
                         var html_body = renderer(email5);
 
@@ -874,7 +877,7 @@ module.exports = function (Forms) {
         type: 'number'
       },
       {
-        arg: 'cityZone',
+        arg: 'city',
         type: 'string'
       }
     ],
