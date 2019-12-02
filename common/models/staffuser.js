@@ -4,6 +4,7 @@ let app = require('../../server/server.js');
 var Role = app.models.Role;
 var RoleMapping = app.models.RoleMapping;
 var ACL = app.models.ACL;
+var g = require('strong-globalize')();
 
 module.exports = function (Staffuser) {
   Staffuser.userDef = function () {};
@@ -282,6 +283,111 @@ module.exports = function (Staffuser) {
     });
 
   })
+
+  Staffuser.login = function (credentials, include, fn) {
+    var self = Staffuser;
+    if (typeof include === 'function') {
+      fn = include;
+      include = undefined;
+    }
+
+    fn = fn || utils.createPromiseCallback();
+
+    include = (include || '');
+    if (Array.isArray(include)) {
+      include = include.map(function (val) {
+        return val.toLowerCase();
+      });
+    } else {
+      include = include.toLowerCase();
+    }
+
+
+    var query = {
+      email: credentials.email
+    }
+
+    if (!query.email) {
+      var err2 = new Error(g.f('{{email}} is required'));
+      err2.statusCode = 400;
+      err2.code = 'EMAIL_REQUIRED';
+      fn(err2);
+      return fn.promise;
+    }
+
+    self.findOne({
+      where: query
+    }, function (err, user) {
+      var defaultError = new Error(g.f('login failed'));
+      defaultError.statusCode = 401;
+      defaultError.code = 'LOGIN_FAILED';
+
+      function tokenHandler(err, token) {
+        if (err) return fn(err);
+        if (Array.isArray(include) ? include.indexOf('user') !== -1 : include === 'user') {
+          // NOTE(bajtos) We can't set token.user here:
+          //  1. token.user already exists, it's a function injected by
+          //     "AccessToken belongsTo User" relation
+          //  2. ModelBaseClass.toJSON() ignores own properties, thus
+          //     the value won't be included in the HTTP response
+          // See also loopback#161 and loopback#162
+
+          token.__data.user = user;
+        }
+        afterLogin({}, user, function (err) {
+          if (err)
+            fn(err, null)
+          else
+            fn(err, token);
+        })
+      }
+
+      if (err) {
+        debug('An error is reported from User.findOne: %j', err);
+        fn(defaultError);
+      } else if (user) {
+        if (user.status != 'active') {
+          fn(errors.account.notActive());
+        }
+        user.hasPassword(credentials.password, function (err, isMatch) {
+          if (err) {
+            debug('An error is reported from User.hasPassword: %j', err);
+            fn(defaultError);
+          } else if (isMatch) {
+
+            if (user.createAccessToken.length === 2) {
+              user.createAccessToken(credentials.ttl, tokenHandler);
+            } else {
+              user.createAccessToken(credentials.ttl, credentials, tokenHandler);
+            }
+          } else {
+            debug('The password is invalid for user %s', query.email || query.username);
+            fn(defaultError);
+          }
+        });
+      } else {
+        debug('No matching record is found for user %s', query.email || query.username);
+        fn(defaultError);
+      }
+    });
+    return fn.promise;
+  }
+
+  function afterLogin(context, client, next) {
+    // console.log(client);
+    // var clientM = app.models.client;
+    var data = client;
+    Staffuser.findOne({
+      where: {
+        id: client.id
+      }
+    }, function (err, user) {
+
+      next();
+
+    });
+
+  };
 
   Staffuser.getConsultant = function (cb) {
     Staffuser.find({
